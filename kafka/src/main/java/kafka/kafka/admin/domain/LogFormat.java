@@ -1,5 +1,6 @@
-package kafka.kafka.domain;
+package kafka.kafka.admin.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -10,6 +11,7 @@ import lombok.Setter;
 @Getter @Setter
 public class LogFormat {
     @Id @GeneratedValue
+    @Column(name = "log_format_id")
     private Long id;
 
     private int idsite;
