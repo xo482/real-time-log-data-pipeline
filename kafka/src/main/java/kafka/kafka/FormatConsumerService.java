@@ -95,6 +95,7 @@ public class FormatConsumerService {
             if (logFormat.getHTTP_X_FORWARDED_FOR() == 1) newJson.set("HTTP_X_FORWARDED_FOR", jsonNode.get("HTTP_X_FORWARDED_FOR"));
             if (logFormat.getHTTP_ACCEPT_ENCODING() == 1) newJson.set("HTTP_ACCEPT_ENCODING", jsonNode.get("HTTP_ACCEPT_ENCODING"));
             if (logFormat.getHTTP_CONNECTION() == 1) newJson.set("HTTP_CONNECTION", jsonNode.get("HTTP_CONNECTION"));
+            if (logFormat.getTime() == 1) newJson.set("time", jsonNode.get("time"));
 
             System.out.println("After parsing: " + newJson);
 
