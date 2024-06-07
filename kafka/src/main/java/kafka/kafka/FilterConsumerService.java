@@ -53,6 +53,7 @@ public class FilterConsumerService {
 
             boolean flag = false; // or 연산자라고 한다면 플래그 값이 변경되는 걸 반대로 진행해야함
             for (Filter filter : filters) {
+                System.out.print("필터링에 사용된 정보 : ");
                 if (filter.getLeft().equals("age")) {
                     int age = Integer.parseInt(member.getAge());
                     System.out.print("age = " + age);
