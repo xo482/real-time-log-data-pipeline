@@ -1,4 +1,4 @@
-package web.web.admin.domain;
+package kafka.kafka.admin.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -55,3 +55,4 @@ public class Scenario {
         this.filters.remove(filter);
     }
 }
+

@@ -3,27 +3,45 @@ package kafka.kafka;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.springframework.beans.factory.annotation.Autowired;
+import kafka.kafka.admin.domain.Scenario;
+import kafka.kafka.admin.domain.Status;
+import kafka.kafka.admin.repository.ScenarioRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class KafkaConsumerService {
 
     private static final String TOPIC_NAME = "start_topic";
     private static final String NEXT_TOPIC = "format_topic";
 
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+
+    private final ScenarioRepository scenarioRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
+
 
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
     public void listen(String message) {
         // 메시지 출력
         System.out.println("========================================== start ==========================================");
         System.out.println("Received message: " + message);
+
+
+        Scenario scenario = scenarioRepository.findById(1L).orElse(null);
+        if (scenario == null) {
+            System.err.println("scenario not found");
+            return;
+        }
+        if (scenario.getStatus() == Status.PAUSE){
+            System.err.println("Scenario paused");
+            return;
+        }
+
 
         try {
             // JSON 객체로 파싱

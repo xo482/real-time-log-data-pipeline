@@ -35,11 +35,11 @@ public class InitDb {
         private final EntityManager em;
 
         public void dbInit1() {
-            Member member = new Member("김성현","ksh990408@skuniv.ac.kr", "1234!!", "21", Gender.MALE);
+            Member member = new Member("memberA","ksh990408@skuniv.ac.kr", "1234!!", "40", Gender.MALE);
             em.persist(member);
         }
         public void dbInit2() {
-            Member member = new Member("가나다라","qwer4545@gmail.com", "zxczxc789~", "21", Gender.FEMALE);
+            Member member = new Member("memberB","qwer4545@gmail.com", "zxczxc789~", "17", Gender.FEMALE);
             em.persist(member);
         }
 
@@ -50,8 +50,8 @@ public class InitDb {
             logFormat.setMemberId(1);
             em.persist(logFormat);
 
-            Filter filter1 = new Filter("나이", "<", "20");
-            Filter filter2 = new Filter("성별", "==", "MALE");
+            Filter filter1 = new Filter("age", ">", "20");
+            Filter filter2 = new Filter("gender", "==", "MALE");
 
             List<Filter> filters = new ArrayList<>();
             filters.add(filter1);
