@@ -30,10 +30,18 @@ public class MemberController {
                     .httpOnly(false)
                     .secure(false) // Secure 속성을 false로 설정
                     .build();
+            ResponseCookie memberNameCookie = ResponseCookie.from("memberName", selectedMember.getUsername())
+                    .path("/")
+                    .httpOnly(false)
+                    .secure(false) // Secure 속성을 false로 설정
+                    .build();
 
             response.addHeader("Set-Cookie", memberIdCookie.toString());
+            response.addHeader("Set-Cookie", memberNameCookie.toString());
+
             // 로그에 쿠키 정보 출력
             log.info("Set-Cookie: " + memberIdCookie.toString());
+            log.info("Set-Cookie: " + memberNameCookie.toString());
         }
         return "redirect:/"; // 리다이렉트할 페이지로 변경 가능
     }

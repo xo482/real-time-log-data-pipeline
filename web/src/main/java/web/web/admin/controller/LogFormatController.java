@@ -53,6 +53,7 @@ public class LogFormatController {
                     case "pf_net": logFormat.setPf_net(1); break;
                     case "_refts": logFormat.set_refts(1); break;
                     case "pf_srv": logFormat.setPf_srv(1); break;
+                    case "memberName": logFormat.setMemberName(1); break;
                     case "wma": logFormat.setWma(1); break;
                     case "pf_onl": logFormat.setPf_onl(1); break;
                     case "HTTP_REFERER": logFormat.setHTTP_REFERER(1); break;

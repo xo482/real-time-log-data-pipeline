@@ -6,11 +6,7 @@ import jakarta.annotation.PostConstruct;
 import kafka.kafka.admin.domain.Filter;
 import kafka.kafka.admin.domain.LogicalOperator;
 import kafka.kafka.admin.domain.Scenario;
-import kafka.kafka.admin.domain.log.FailureLog;
-import kafka.kafka.admin.domain.log.SuccessLog;
-import kafka.kafka.admin.repository.FailureLogRepository;
 import kafka.kafka.admin.repository.ScenarioRepository;
-import kafka.kafka.admin.repository.SuccessLogRepository;
 import kafka.kafka.domain.Gender;
 import kafka.kafka.domain.Member;
 import kafka.kafka.repository.MemberRepository;
@@ -34,8 +30,6 @@ public class FilterConsumerService {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ScenarioRepository scenarioRepository;
     private final MemberRepository memberRepository;
-    private final SuccessLogRepository successLogRepository;
-    private final FailureLogRepository failureLogRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
     private Member member;
@@ -104,10 +98,8 @@ public class FilterConsumerService {
             //== 저장 ==//
             if (flag) {
                 System.out.println("적합하므로 성공 테이블에 저장");
-                successLogRepository.save(new SuccessLog(jsonNode.toString()));
             } else {
                 System.out.println("적합하지 않으므로 실패 테이블에 저장");
-                failureLogRepository.save(new FailureLog(jsonNode.toString()));
             }
 
         } catch (Exception e) {

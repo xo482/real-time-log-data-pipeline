@@ -74,6 +74,7 @@ public class FormatConsumerService {
             if (logFormat.getPf_net() == 1) newJson.set("pf_net", jsonNode.get("pf_net"));
             if (logFormat.get_refts() == 1) newJson.set("_refts", jsonNode.get("_refts"));
             if (logFormat.getPf_srv() == 1) newJson.set("pf_srv", jsonNode.get("pf_srv"));
+            if (logFormat.getMemberName() == 1) newJson.set("memberName", jsonNode.get("memberName"));
             if (logFormat.getWma() == 1) newJson.set("wma", jsonNode.get("wma"));
             if (logFormat.getPf_onl() == 1) newJson.set("pf_onl", jsonNode.get("pf_onl"));
             if (logFormat.getHTTP_REFERER() == 1) newJson.set("HTTP_REFERER", jsonNode.get("HTTP_REFERER"));
