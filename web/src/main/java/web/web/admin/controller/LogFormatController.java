@@ -75,7 +75,7 @@ public class LogFormatController {
                     case "HTTP_X_FORWARDED_FOR": logFormat.setHTTP_X_FORWARDED_FOR(1); break;
                     case "HTTP_ACCEPT_ENCODING": logFormat.setHTTP_ACCEPT_ENCODING(1); break;
                     case "HTTP_CONNECTION": logFormat.setHTTP_CONNECTION(1); break;
-                    case "time": logFormat.setTime(1); break;
+                    case "date": logFormat.setDate(1); break;
                 }
             }
         }
