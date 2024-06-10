@@ -1,6 +1,6 @@
-package kafka.kafka.repository;
+package kafka.kafka.admin.repository;
 
-import kafka.kafka.domain.LogFormat;
+import kafka.kafka.admin.domain.LogFormat;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LogFormatRepository extends JpaRepository<LogFormat, Long> {

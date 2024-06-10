@@ -1,5 +1,6 @@
-package kafka.kafka.domain;
+package kafka.kafka.admin.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -10,6 +11,7 @@ import lombok.Setter;
 @Getter @Setter
 public class LogFormat {
     @Id @GeneratedValue
+    @Column(name = "log_format_id")
     private Long id;
 
     private int idsite;
@@ -62,7 +64,7 @@ public class LogFormat {
     private int HTTP_X_FORWARDED_FOR;
     private int HTTP_ACCEPT_ENCODING;
     private int HTTP_CONNECTION;
-    private int time;
+    private int date;
 
     // 기본 생성자
     public LogFormat() {
@@ -116,7 +118,7 @@ public class LogFormat {
         this.HTTP_X_FORWARDED_FOR = 0;
         this.HTTP_ACCEPT_ENCODING = 0;
         this.HTTP_CONNECTION = 0;
-        this.time = 0;
+        this.date = 0;
     }
 }
 

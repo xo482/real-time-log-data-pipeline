@@ -14,16 +14,18 @@
     </script>
     <!-- End Matomo Tag Manager -->
 
-    <!-- Matomo Tag Manager -->
-    <script>
-        var _mtm = window._mtm = window._mtm || [];
-        _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
-        (function() {
-            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.async=true; g.src='http://172.28.0.4/js/container_9KD9SNRT.js'; s.parentNode.insertBefore(g,s);
-        })();
-    </script>
-    <!-- End Matomo Tag Manager -->
+
+<!--버튼 클릭 이벤트-->
+<!--    &lt;!&ndash; Matomo Tag Manager &ndash;&gt;-->
+<!--    <script>-->
+<!--        var _mtm = window._mtm = window._mtm || [];-->
+<!--        _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});-->
+<!--        (function() {-->
+<!--            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];-->
+<!--            g.async=true; g.src='http://172.28.0.4/js/container_9KD9SNRT.js'; s.parentNode.insertBefore(g,s);-->
+<!--        })();-->
+<!--    </script>-->
+<!--    &lt;!&ndash; End Matomo Tag Manager &ndash;&gt;-->
 
 
     <style>
@@ -54,6 +56,7 @@
     <form action="/select-member" method="post">
         <button type="submit" name="memberId" value="1">회원 1 선택</button>
         <button type="submit" name="memberId" value="2">회원 2 선택</button>
+        <button type="submit" name="memberId" value="3">회원 3 선택</button>
     </form>
 
     <button>으아아아아아아아아아</button>
@@ -64,56 +67,56 @@
         <h1>Select JSON Keys</h1>
         <form action="/saveKeys" method="post">
             <div class="keys">
-                <div class="key"><input type="checkbox" name="keys" value="idsite"> idsite</div>
-                <div class="key"><input type="checkbox" name="keys" value="e_a"> e_a</div>
-                <div class="key"><input type="checkbox" name="keys" value="e_c"> e_c</div>
-                <div class="key"><input type="checkbox" name="keys" value="REMOTE_ADDR"> REMOTE_ADDR</div>
-                <div class="key"><input type="checkbox" name="keys" value="rec"> rec</div>
-                <div class="key"><input type="checkbox" name="keys" value="java"> java</div>
+<!--                <div class="key"><input type="checkbox" name="keys" value="idsite"> idsite</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="e_a"> e_a</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="e_c"> e_c</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="REMOTE_ADDR"> REMOTE_ADDR</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="rec"> rec</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="java"> java</div>-->
                 <div class="key"><input type="checkbox" name="keys" value="e_n"> e_n</div>
-                <div class="key"><input type="checkbox" name="keys" value="pf_dm1"> pf_dm1</div>
-                <div class="key"><input type="checkbox" name="keys" value="e_v"> e_v</div>
-                <div class="key"><input type="checkbox" name="keys" value="pf_tfr"> pf_tfr</div>
+<!--                <div class="key"><input type="checkbox" name="keys" value="pf_dm1"> pf_dm1</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="e_v"> e_v</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="pf_tfr"> pf_tfr</div>-->
                 <div class="key"><input type="checkbox" name="keys" value="memberId"> memberId</div>
                 <div class="key"><input type="checkbox" name="keys" value="HTTP_ORIGIN"> HTTP_ORIGIN</div>
-                <div class="key"><input type="checkbox" name="keys" value="send_image"> send_image</div>
-                <div class="key"><input type="checkbox" name="keys" value="res"> res</div>
-                <div class="key"><input type="checkbox" name="keys" value="qt"> qt</div>
-                <div class="key"><input type="checkbox" name="keys" value="cookie"> cookie</div>
+<!--                <div class="key"><input type="checkbox" name="keys" value="send_image"> send_image</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="res"> res</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="qt"> qt</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="cookie"> cookie</div>-->
                 <div class="key"><input type="checkbox" name="keys" value="HTTP_ACCEPT_LANGUAGE"> HTTP_ACCEPT_LANGUAGE</div>
-                <div class="key"><input type="checkbox" name="keys" value="ag"> ag</div>
-                <div class="key"><input type="checkbox" name="keys" value="HTTP_X_REAL_IP"> HTTP_X_REAL_IP</div>
-                <div class="key"><input type="checkbox" name="keys" value="HTTP_CONTENT_TYPE"> HTTP_CONTENT_TYPE</div>
-                <div class="key"><input type="checkbox" name="keys" value="HTTP_X_FORWARDED_PROTO"> HTTP_X_FORWARDED_PROTO</div>
-                <div class="key"><input type="checkbox" name="keys" value="_event_record"> _event_record</div>
-                <div class="key"><input type="checkbox" name="keys" value="HTTP_USER_AGENT"> HTTP_USER_AGENT</div>
-                <div class="key"><input type="checkbox" name="keys" value="_id"> _id</div>
-                <div class="key"><input type="checkbox" name="keys" value="pf_net"> pf_net</div>
-                <div class="key"><input type="checkbox" name="keys" value="_refts"> _refts</div>
-                <div class="key"><input type="checkbox" name="keys" value="pf_srv"> pf_srv</div>
-                <div class="key"><input type="checkbox" name="keys" value="memberName"> memberName</div>
-                <div class="key"><input type="checkbox" name="keys" value="wma"> wma</div>
-                <div class="key"><input type="checkbox" name="keys" value="pf_onl"> pf_onl</div>
+<!--                <div class="key"><input type="checkbox" name="keys" value="ag"> ag</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="HTTP_X_REAL_IP"> HTTP_X_REAL_IP</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="HTTP_CONTENT_TYPE"> HTTP_CONTENT_TYPE</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="HTTP_X_FORWARDED_PROTO"> HTTP_X_FORWARDED_PROTO</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="_event_record"> _event_record</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="HTTP_USER_AGENT"> HTTP_USER_AGENT</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="_id"> _id</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="pf_net"> pf_net</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="_refts"> _refts</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="pf_srv"> pf_srv</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="memberName"> memberName</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="wma"> wma</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="pf_onl"> pf_onl</div>-->
                 <div class="key"><input type="checkbox" name="keys" value="HTTP_REFERER"> HTTP_REFERER</div>
-                <div class="key"><input type="checkbox" name="keys" value="_idn"> _idn</div>
-                <div class="key"><input type="checkbox" name="keys" value="fla"> fla</div>
-                <div class="key"><input type="checkbox" name="keys" value="ca"> ca</div>
-                <div class="key"><input type="checkbox" name="keys" value="urlref"> urlref</div>
+<!--                <div class="key"><input type="checkbox" name="keys" value="_idn"> _idn</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="fla"> fla</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="ca"> ca</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="urlref"> urlref</div>-->
                 <div class="key"><input type="checkbox" name="keys" value="HTTP_CONTENT_LENGTH"> HTTP_CONTENT_LENGTH</div>
-                <div class="key"><input type="checkbox" name="keys" value="realp"> realp</div>
+<!--                <div class="key"><input type="checkbox" name="keys" value="realp"> realp</div>-->
                 <div class="key"><input type="checkbox" name="keys" value="h"> h</div>
-                <div class="key"><input type="checkbox" name="keys" value="pf_dm2"> pf_dm2</div>
+<!--                <div class="key"><input type="checkbox" name="keys" value="pf_dm2"> pf_dm2</div>-->
                 <div class="key"><input type="checkbox" name="keys" value="m"> m</div>
                 <div class="key"><input type="checkbox" name="keys" value="url"> url</div>
                 <div class="key"><input type="checkbox" name="keys" value="r"> r</div>
-                <div class="key"><input type="checkbox" name="keys" value="HTTP_HOST"> HTTP_HOST</div>
+<!--                <div class="key"><input type="checkbox" name="keys" value="HTTP_HOST"> HTTP_HOST</div>-->
                 <div class="key"><input type="checkbox" name="keys" value="s"> s</div>
-                <div class="key"><input type="checkbox" name="keys" value="pdf"> pdf</div>
-                <div class="key"><input type="checkbox" name="keys" value="HTTP_ACCEPT"> HTTP_ACCEPT</div>
-                <div class="key"><input type="checkbox" name="keys" value="HTTP_X_FORWARDED_FOR"> HTTP_X_FORWARDED_FOR</div>
-                <div class="key"><input type="checkbox" name="keys" value="HTTP_ACCEPT_ENCODING"> HTTP_ACCEPT_ENCODING</div>
-                <div class="key"><input type="checkbox" name="keys" value="HTTP_CONNECTION"> HTTP_CONNECTION</div>
-                <div class="key"><input type="checkbox" name="keys" value="time"> time</div>
+<!--                <div class="key"><input type="checkbox" name="keys" value="pdf"> pdf</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="HTTP_ACCEPT"> HTTP_ACCEPT</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="HTTP_X_FORWARDED_FOR"> HTTP_X_FORWARDED_FOR</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="HTTP_ACCEPT_ENCODING"> HTTP_ACCEPT_ENCODING</div>-->
+<!--                <div class="key"><input type="checkbox" name="keys" value="HTTP_CONNECTION"> HTTP_CONNECTION</div>-->
+                <div class="key"><input type="checkbox" name="keys" value="date"> date</div>
             </div>
             <br>
             <button type="submit">Submit</button>

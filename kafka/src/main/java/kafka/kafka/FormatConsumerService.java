@@ -1,9 +1,10 @@
 package kafka.kafka;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import kafka.kafka.domain.LogFormat;
-import kafka.kafka.repository.LogFormatRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import kafka.kafka.admin.domain.LogFormat;
+import kafka.kafka.admin.domain.Scenario;
+import kafka.kafka.admin.repository.ScenarioRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -12,34 +13,34 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
+@RequiredArgsConstructor
 public class FormatConsumerService {
 
     private static final String TOPIC_NAME = "format_topic";
     private static final String NEXT_TOPIC = "filter_topic";
 
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
-    @Autowired
-    private LogFormatRepository logFormatRepository;
+    private final ScenarioRepository scenarioRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
+
 
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
     public void listen(String message) {
         System.out.println("========================================== format ==========================================");
         System.out.println("Received message: " + message);
 
+        Scenario scenario = scenarioRepository.findById(1L).orElse(null);
+        // LogFormatRepository에서 id가 1인 데이터를 가져옴
+        LogFormat logFormat = scenario.getLogFormat();
+        if (logFormat == null) {
+            System.err.println("LogFormat not found");
+            return;
+        }
         try {
             // 받은 메시지를 JSON으로 파싱
             JsonNode jsonNode = objectMapper.readTree(message);
-
-            // LogFormatRepository에서 id가 1인 데이터를 가져옴
-            LogFormat logFormat = logFormatRepository.findById(1L).orElse(null);
-            if (logFormat == null) {
-                System.err.println("LogFormat with id 1 not found");
-                return;
-            }
 
             // 새로운 JSON 객체 생성
             ObjectNode newJson = objectMapper.createObjectNode();
@@ -95,7 +96,7 @@ public class FormatConsumerService {
             if (logFormat.getHTTP_X_FORWARDED_FOR() == 1) newJson.set("HTTP_X_FORWARDED_FOR", jsonNode.get("HTTP_X_FORWARDED_FOR"));
             if (logFormat.getHTTP_ACCEPT_ENCODING() == 1) newJson.set("HTTP_ACCEPT_ENCODING", jsonNode.get("HTTP_ACCEPT_ENCODING"));
             if (logFormat.getHTTP_CONNECTION() == 1) newJson.set("HTTP_CONNECTION", jsonNode.get("HTTP_CONNECTION"));
-            if (logFormat.getTime() == 1) newJson.set("time", jsonNode.get("time"));
+            if (logFormat.getDate() == 1) newJson.set("date", jsonNode.get("date"));
 
             System.out.println("After parsing: " + newJson);
 
