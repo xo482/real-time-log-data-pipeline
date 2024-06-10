@@ -42,7 +42,6 @@ public class LogFormat {
     private int pf_net;
     private int _refts;
     private int pf_srv;
-    private int memberName;
     private int wma;
     private int pf_onl;
     private int HTTP_REFERER;
@@ -96,7 +95,6 @@ public class LogFormat {
         this.pf_net = 0;
         this._refts = 0;
         this.pf_srv = 0;
-        this.memberName = 0;
         this.wma = 0;
         this.pf_onl = 0;
         this.HTTP_REFERER = 0;
