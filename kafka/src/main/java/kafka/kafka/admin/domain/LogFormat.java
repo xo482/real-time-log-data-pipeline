@@ -64,7 +64,7 @@ public class LogFormat {
     private int HTTP_X_FORWARDED_FOR;
     private int HTTP_ACCEPT_ENCODING;
     private int HTTP_CONNECTION;
-    private int time;
+    private int date;
 
     // 기본 생성자
     public LogFormat() {
@@ -118,7 +118,7 @@ public class LogFormat {
         this.HTTP_X_FORWARDED_FOR = 0;
         this.HTTP_ACCEPT_ENCODING = 0;
         this.HTTP_CONNECTION = 0;
-        this.time = 0;
+        this.date = 0;
     }
 }
 

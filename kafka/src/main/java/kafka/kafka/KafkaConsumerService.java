@@ -47,9 +47,9 @@ public class KafkaConsumerService {
             // JSON 객체로 파싱
             JsonNode jsonNode = objectMapper.readTree(message);
             // message 키와 time 키에 대한 필드 추출
-            if (jsonNode.has("message") && jsonNode.has("time")) {
+            if (jsonNode.has("message") && jsonNode.has("date")) {
                 String logMessage = jsonNode.get("message").asText();
-                String time = jsonNode.get("time").asText();
+                String date = jsonNode.get("date").asText();
 
                 // "params=" 이후의 문자열을 추출
                 String[] parts = logMessage.split("params=");
@@ -65,7 +65,7 @@ public class KafkaConsumerService {
                     }
 
                     // time 값을 paramsJson에 추가
-                    ((ObjectNode) paramsJson).put("time", time);
+                    ((ObjectNode) paramsJson).put("date", date);
 
                     System.out.println("After parsing: " + paramsJson);
 

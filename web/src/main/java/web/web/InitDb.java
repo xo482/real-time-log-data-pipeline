@@ -25,6 +25,7 @@ public class InitDb {
         initService.dbInit1();
         initService.dbInit2();
         initService.dbInit3();
+        initService.dbInit4();
     }
 
     @Component
@@ -44,20 +45,28 @@ public class InitDb {
         }
 
         public void dbInit3() {
+            Member member = new Member("memberC","asdasd@gmail.com", "348dje3@#$", "22", Gender.FEMALE);
+            em.persist(member);
+        }
+
+        public void dbInit4() {
             LogFormat logFormat = new LogFormat();
             logFormat.setE_n(1);
-            logFormat.setTime(1);
+            logFormat.setH(1);
             logFormat.setMemberId(1);
+            logFormat.setDate(1);
             em.persist(logFormat);
 
             Filter filter1 = new Filter("age", ">", "20");
             Filter filter2 = new Filter("gender", "==", "MALE");
+            Filter filter3 = new Filter("h", ">=", "13");
 
             List<Filter> filters = new ArrayList<>();
             filters.add(filter1);
             filters.add(filter2);
+            filters.add(filter3);
 
-            String title = "구매 버튼을 누르는 사람 중에 성인 남성 비율을 알아보기 위한 시나리오";
+            String title = " 13시 이후 구매 버튼을 누르는 사람 중에 성인 남성 비율을 알아보기 위한 시나리오";
             String manager = "홍길동";
             Status status = Status.RUN;
             LogicalOperator logicalOperator = LogicalOperator.AND;

@@ -22,6 +22,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
 
+	implementation 'org.openjdk.nashorn:nashorn-core:15.4'
+
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
 	compileOnly 'org.projectlombok:lombok'
