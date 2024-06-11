@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import web.web.admin.domain.*;
-import web.web.domain.Gender;
-import web.web.domain.Member;
+import web.web.shoppingmall.domain.Gender;
+import web.web.shoppingmall.domain.Member;
 
 import java.util.ArrayList;
 import java.util.List;
