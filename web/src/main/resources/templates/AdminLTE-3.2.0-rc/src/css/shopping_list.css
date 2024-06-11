@@ -1,0 +1,80 @@
+h1 {
+  margin-left: 300px;
+  margin-top: 100px;
+}
+
+.home-button {
+            margin-top: 100px;
+            margin-left: 40px;
+            padding: 8px 10px; /* 홈 버튼의 패딩 */
+            font-size: 16px; /* 홈 버튼의 글꼴 크기 */
+            background-color: #0d6efd; /* 홈 버튼 배경색 */
+            color: #ffffff; /* 홈 버튼 텍스트 색상 */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none; /* 링크의 기본 밑줄 제거 */
+        }
+
+
+.orders-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 한 행에 4개의 열 */
+  column-gap: -20px; /* 컨테이너 사이 가로 간격 좁힘 */
+  row-gap: 80px; /* 컨테이너 사이 세로 간격 늘림 */
+  justify-content: center; /* 가운데 정렬 */
+  margin-top: 100px; /* 상단 여백 */
+  margin-left: 300px; /* 좌측 여백 */
+  margin-right: 300px;
+  margin-bottom: 100px;
+
+}
+
+.container {
+  width: 300px;
+  height: 400px;
+  background-color: #ffffff; /* 컨테이너 배경색 */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 7px 7px 39px rgba(0, 104, 255, 0.25); /* 그림자 효과 */
+}
+
+.product-img {
+  width: 100px;
+  height: 100px;
+}
+
+.order {
+  margin-top: 15px; /* 주문 내역과의 간격 */
+}
+
+.order-item {
+  border-bottom: 1px solid #dddddd; /* 주문 항목 사이의 구분선 */
+  padding-bottom: 20px; /* 주문 항목 간격 */
+}
+
+.order-cancel {
+  text-align: center; /* 주문 취소 버튼 가운데 정렬 */
+  margin-top: 10px; /* 주문 취소 버튼과의 간격 */
+}
+
+button {
+  padding: 8px 20px; /* 주문 취소 버튼의 패딩 */
+  font-size: 16px; /* 주문 취소 버튼의 글꼴 크기 */
+  background-color: #0d6efd; /* 주문 취소 버튼 배경색 */
+  color: #ffffff; /* 주문 취소 버튼 텍스트 색상 */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #212529; /* 마우스 호버 시 배경색 변경 */
+}
+
+
+  .more-orders {  //지난 주문내역 더보기 버튼
+    margin-right: 100px;
+     margin-top: -60px;
+     margin-left: 500px;
+ }

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그 설정 페이지</title>
+  <link rel="stylesheet" href="../css/logsetting.css">
+  <script src="../js/logsetting.js" defer></script>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>로그 설정 페이지</h1>
+  </header>
+  <section id="sample-data-upload">
+    <h2>샘플 데이터 파일 등록</h2>
+    <div class="file-upload">
+      <h3>파일 등록</h3>
+      <input type="file" id="file-input">
+      <button type="button" id="browse-button">찾아보기</button>
+    </div>
+    <div class="log-preview">
+      <h3>로그 기록 미리보기</h3>
+      <textarea id="log-preview" rows="10" cols="50" readonly></textarea>
+    </div>
+  </section>
+  <section id="format-specification">
+    <h2>파일 포맷 지정</h2>
+    <div class="format-select">
+      <label for="file-format">파일 형식:</label>
+      <select id="file-format">
+        <option value="JSONFile">JSONFile</option>
+        <option value="option1">Option 1</option>
+        <option value="option2">Option 2</option>
+        <option value="option3">Option 3</option>
+      </select>
+      <button id="apply-format">포맷 적용</button>
+    </div>
+  </section>
+  <section id="json-output">
+    <h2>변환된 JSON 로그</h2>
+    <textarea id="json-log" rows="10" cols="50" readonly></textarea>
+  </section>
+  <section id="additional-settings">
+    <div class="row">
+      <label for="name">이름:</label>
+      <input type="text" id="name">
+      <label for="description">설명:</label>
+      <input type="text" id="description">
+      <button id="apply">저장</button>
+      <button id="update">수정</button>
+    </div>
+  </section>
+</div>
+</body>
+</html>

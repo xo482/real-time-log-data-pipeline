@@ -2,7 +2,6 @@ package kafka.kafka;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
 import kafka.kafka.admin.domain.Filter;
 import kafka.kafka.admin.domain.LogicalOperator;
 import kafka.kafka.admin.domain.Scenario;
@@ -20,8 +19,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import java.util.List;
 
 @Service
@@ -39,17 +36,6 @@ public class FilterConsumerService {
     private ObjectMapper objectMapper = new ObjectMapper();
     private Member member;
     private JsonNode jsonNode;
-    private ScriptEngine engine;
-
-    @PostConstruct
-    public void init() {
-        // ScriptEngine 초기화
-        ScriptEngineManager manager = new ScriptEngineManager();
-        this.engine = manager.getEngineByName("nashorn");
-        if (this.engine == null) {
-            throw new IllegalStateException("Nashorn script engine not found. Make sure to add it as a dependency.");
-        }
-    }
 
 
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")

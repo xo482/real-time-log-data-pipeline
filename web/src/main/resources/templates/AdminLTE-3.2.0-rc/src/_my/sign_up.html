@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입</title>
+  <style>
+    * {
+        box-sizing: border-box;
+        font-family: "Noto Sans CJK KR";
+        font-style: normal;
+    }
+
+    body {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 600px;
+        height: 1000px;
+        margin-top: 60px;
+        margin-bottom: 60px;
+        background: #ffffff;
+        border: 1px solid #aacdff;
+        box-shadow: 7px 7px 39px rgba(0, 104, 255, 0.25);
+        border-radius: 20px;
+    }
+
+    .member-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 470px;
+        height: 818px;
+        margin-top: 72px;
+        margin-bottom: 70px;
+    }
+
+    .header {
+        width: 466px;
+        height: 94px;
+        font-weight: 700;
+        font-size: 32px;
+        line-height: 47px;
+        color:  #0068ff;
+    }
+
+    .user-info {
+        margin-top: 39px;
+    }
+
+    .user-info div {
+        margin-top: 23px;
+    }
+
+    .user-info input {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+        color: #797979;
+        border: none;
+        border-bottom: 1px solid #cfcfcf;
+        width: 466px;
+        margin-top: 25px;
+    }
+
+    .user-info-email input {
+        border-bottom: 1px solid #0068ff;
+    }
+
+    .gender {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 140px;
+        height: 23.94px;
+        margin-top: 50px;
+    }
+
+    .gender input {
+        width: 20px;
+        height: 19.95px;
+        background: #ebebeb;
+        border: 1px solid #d2d2d2;
+    }
+
+    .gender label {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    .agree-check {
+        width: 480px;
+        height: 21.06px;
+        margin-top: 70px;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
+        color: #000000;
+    }
+
+    .btn {
+        display: flex;
+        flex-direction: column;
+        margin-top: 60px;
+        width: 470px;
+        height: 106px;
+        border-top: 1px solid #e6e6e6;
+    }
+
+    button {
+        margin-top: -20px;
+        margin-bottom: 40px;
+        width: 470px;
+        height: 75px;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 27px;
+        text-align: center;
+        color: #ffffff;
+        background: #0583F2;
+        border: 1px solid  #0068ff;
+        border-radius: 10px;
+    }
+
+    .home-btn {
+        margin-top: 50px;
+        margin-bottom:200px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="member-container">
+    <div class="header">
+      <div>회원 가입을 위해</div>
+      <div>정보를 입력해주세요</div>
+    </div>
+    <div class="user-info">
+      <div class="user-info-email">
+        <div>* 이메일</div>
+        <input type="email" id="email" required />
+      </div>
+
+      <div class="user-info-pw">
+        <div>* 비밀번호</div>
+        <input type="password" id="password" required />
+      </div>
+      <div class="user-info-pw-check">
+        <div>* 비밀번호 확인</div>
+        <input type="password" id="password-check" required />
+      </div>
+
+      <div class="user-info-name">
+        <div>* 이름</div>
+        <input type="text" id="name" required />
+      </div>
+
+      <div class="user-info-birth">
+        <div>* 생년월일</div>
+        <input type="date" id="birthdate" required />
+      </div>
+      <div class="user-info-address">
+        <div>* 도로명</div>
+        <input type="text" id="address" required />
+      </div>
+      <div class="user-info-zipcode">
+        <div>* 우편번호</div>
+        <input type="text" id="zipcode" required />
+      </div>
+
+    </div>
+    <div class="gender">
+      <input type="radio" id="women" name="gender" value="women" required />
+      <label for="women">여성</label>
+      <input type="radio" id="men" name="gender" value="men" required />
+      <label for="men">남성</label>
+    </div>
+
+    <div class="agree-check">
+      <input type="checkbox" id="agree" required /> 이용약관 개인정보 수집 및 이용, 마케팅 활용 선택에 모두 동의합니다.
+    </div>
+    <div class="btn">
+      <button type="button" onclick="submitForm()">가입하기</button>
+    </div>
+    <div class="home-btn">
+      <a href="shoppingmall.html">홈으로 가기</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function submitForm() {
+      // 입력 필드의 값 가져오기
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const passwordCheck = document.getElementById('password-check').value;
+      const name = document.getElementById('name').value;
+      const birthdate = document.getElementById('birthdate').value;
+      const address = document.getElementById('address').value;
+      const zipcode = document.getElementById('zipcode').value;
+      const gender = document.querySelector('input[name="gender"]:checked')?.value;
+      const agree = document.getElementById('agree').checked;
+
+      // 필수 필드 검증
+      if (!email || !password || !passwordCheck || !name || !birthdate || !address || !zipcode || !gender || !agree) {
+          alert('모든 필드를 채워주세요.');
+          return;
+      }
+
+      // 비밀번호 일치 여부 확인
+      if (password !== passwordCheck) {
+          alert('비밀번호가 일치하지 않습니다.');
+          return;
+      }
+
+      // 회원가입 데이터 객체 생성
+      const formData = {
+          email: email,
+          password: password,
+          name: name,
+          birthdate: birthdate,
+          address: address,
+          zipcode: zipcode,
+          gender: gender,
+          agree: agree
+      };
+
+      // 데이터 출력 (실제 환경에서는 서버로 전송)
+      console.log('회원가입 데이터:', formData);
+
+      // 예시로 성공 메시지 표시
+      alert('회원가입이 완료되었습니다.');
+  }
+</script>
+</body>
+</html>
