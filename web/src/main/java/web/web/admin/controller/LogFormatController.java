@@ -84,13 +84,19 @@ public class LogFormatController {
         // 데이터베이스에 저장
         logFormatRepository.save(logFormat);
 
-        return "redirect:/logFormatPage";
+        return "redirect:/logFormats";
     }
 
-    @GetMapping("/logFormatPage")
-    public String showLogFormatPage(Model model) {
+    @GetMapping("/logFormats")
+    public String getLogFormats(Model model) {
         List<LogFormat> logFormats = logFormatRepository.findAll();
         model.addAttribute("logFormats", logFormats);
+        return "/AdminLTE-3.2.0-rc/src/_my/logFormatPage";
+    }
+
+
+    @GetMapping("/logFormatPage")
+    public String showLogFormatPage() {
         return "/AdminLTE-3.2.0-rc/src/_my/logFormatPage";
     }
 
