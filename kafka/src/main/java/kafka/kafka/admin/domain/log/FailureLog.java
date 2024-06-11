@@ -12,12 +12,15 @@ public class FailureLog {
     @Column(name = "failure_log_id")
     private Long id;
 
+    private Long scenario_id;
+
     @Column(name = "message", nullable = false)
     private String message;
 
     public FailureLog() {}
 
-    public FailureLog(String message) {
+    public FailureLog(Long scenario_id, String message) {
+        this.scenario_id = scenario_id;
         this.message = message;
     }
 }

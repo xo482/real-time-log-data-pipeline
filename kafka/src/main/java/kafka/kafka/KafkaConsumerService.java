@@ -31,8 +31,8 @@ public class KafkaConsumerService {
         System.out.println("========================================== start ==========================================");
         System.out.println("Received message: " + message);
 
-
-        Scenario scenario = scenarioRepository.findById(1L).orElse(null);
+        Long scenario_id = 1L;
+        Scenario scenario = scenarioRepository.findById(scenario_id).orElse(null);
         if (scenario == null) {
             System.err.println("scenario not found");
             return;

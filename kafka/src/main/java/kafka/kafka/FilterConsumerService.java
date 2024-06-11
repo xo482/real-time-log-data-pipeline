@@ -2,7 +2,6 @@ package kafka.kafka;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
 import kafka.kafka.admin.domain.Filter;
 import kafka.kafka.admin.domain.LogicalOperator;
 import kafka.kafka.admin.domain.Scenario;
@@ -20,8 +19,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import java.util.List;
 
 @Service
@@ -39,17 +36,6 @@ public class FilterConsumerService {
     private ObjectMapper objectMapper = new ObjectMapper();
     private Member member;
     private JsonNode jsonNode;
-    private ScriptEngine engine;
-
-    @PostConstruct
-    public void init() {
-        // ScriptEngine 초기화
-        ScriptEngineManager manager = new ScriptEngineManager();
-        this.engine = manager.getEngineByName("nashorn");
-        if (this.engine == null) {
-            throw new IllegalStateException("Nashorn script engine not found. Make sure to add it as a dependency.");
-        }
-    }
 
 
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
@@ -58,7 +44,8 @@ public class FilterConsumerService {
         System.out.println("========================================== filter ==========================================");
         System.out.println("Received message: " + message);
 
-        Scenario scenario = scenarioRepository.findById(1L).orElse(null);
+        Long scenario_id = 1L;
+        Scenario scenario = scenarioRepository.findById(scenario_id).orElse(null);
 
         // 필터링 정보 가져오기
         List<Filter> filters = scenario.getFilters();
@@ -103,10 +90,10 @@ public class FilterConsumerService {
             //== 저장 ==//
             if (flag) {
                 System.out.println("적합하므로 성공 테이블에 저장");
-                successLogRepository.save(new SuccessLog(jsonNode.toString()));
+                successLogRepository.save(new SuccessLog(scenario_id, jsonNode.toString()));
             } else {
                 System.out.println("적합하지 않으므로 실패 테이블에 저장");
-                failureLogRepository.save(new FailureLog(jsonNode.toString()));
+                failureLogRepository.save(new FailureLog(scenario_id, jsonNode.toString()));
             }
 
         } catch (Exception e) {
@@ -158,6 +145,12 @@ public class FilterConsumerService {
         }
     }
     private boolean compareGender(String operator, String right) {
+
+        // null이면 비회원으로 남긴 로그임
+        if (member == null) {
+            return false;
+        }
+
         Gender gender = member.getGender();
         String genderStr = gender.toString();
         switch (operator) {
@@ -170,6 +163,12 @@ public class FilterConsumerService {
         }
     }
     private boolean compareAge(String operator, String right) {
+
+        // null이면 비회원으로 남긴 로그임
+        if (member == null) {
+            return false;
+        }
+
         int age = Integer.parseInt(member.getAge());
         int comparisonAge = Integer.parseInt(right);
         switch (operator) {

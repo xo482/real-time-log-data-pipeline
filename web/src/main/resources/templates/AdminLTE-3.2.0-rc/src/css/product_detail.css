@@ -1,0 +1,103 @@
+/* CSS 파일에 필요한 스타일을 작성합니다. */
+
+
+/* product_detail.css */
+
+/* product_detail.css */
+
+
+
+
+
+
+img {
+
+    box-shadow: 7px 7px 39px rgba(0, 104, 255, 0.25);
+    width:400px;
+
+    margin-left: 18%;
+    margin-top: 250px;
+}
+
+.product-name {
+    font-size: 25px; /* 상품명 폰트 크기 설정 */
+    margin-right:50px;
+    margin-left:53%;
+    margin-top: -400px;
+    }
+
+.product-price {
+ font-size: 35px;
+ margin-right: 15%;
+ margin-left: 53%;
+margin-top: 40px;
+}
+
+.product-options {
+margin-top: 100px;
+margin-left: 53%;
+font-size: 20px;
+}
+
+.product-options select {
+      font-size: 20px; /* 옵션 선택 박스 글씨 크기 */
+      padding: 2px; /* 옵션 선택 박스 내부 여백 */
+    }
+
+/* 수량 버튼 스타일 */
+.quantity {
+ margin-left: 53%;
+margin-top: 90px;
+}
+
+/* 마이너스 버튼 스타일 */
+.minus-btn, .plus-btn {
+    background-color: #ddd;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+/* 수량 입력 필드 스타일 */
+.quantity-input {
+    border: 1px solid #ddd;
+    width: 50px;
+    text-align: center;
+    padding:4px;
+}
+
+
+
+ .purchase-button {
+    margin-top: 6%;
+    margin-right:15rem;
+    margin-bottom: 5rem;
+    width: 100px; /* 너비를 100px로 설정 */
+    height: 50px; /* 높이를 50px로 설정 */
+    padding: 5px; /* 내부 여백을 조정합니다. */
+    background: #007BFF;
+    color: #ffffff;
+    text-align: center; /* 텍스트 가운데 정렬 */
+    line-height: 50px; /* 버튼의 높이와 동일하게 설정하여 수직 가운데 정렬 */
+     float: right; /* 우측으로 띄우기 */
+
+}
+
+
+
+
+
+
+.purchase-button {
+    font-size: 1em; /* 텍스트의 크기를 기본 크기로 설정 */
+}
+
+.purchase-button:hover {
+    background: #0069d9;
+}
+
+.purchase-button {
+    text-decoration: none; /* 버튼 텍스트의 밑줄을 없애줍니다. */
+}
+
+

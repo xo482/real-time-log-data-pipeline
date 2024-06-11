@@ -3,6 +3,8 @@ package web.web.admin.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import web.web.admin.domain.LogFormat;
@@ -82,6 +84,20 @@ public class LogFormatController {
         // 데이터베이스에 저장
         logFormatRepository.save(logFormat);
 
-        return "redirect:/";
+        return "redirect:/logFormats";
     }
+
+    @GetMapping("/logFormats")
+    public String getLogFormats(Model model) {
+        List<LogFormat> logFormats = logFormatRepository.findAll();
+        model.addAttribute("logFormats", logFormats);
+        return "/AdminLTE-3.2.0-rc/src/_my/logFormatPage";
+    }
+
+
+    @GetMapping("/logFormatPage")
+    public String showLogFormatPage() {
+        return "/AdminLTE-3.2.0-rc/src/_my/logFormatPage";
+    }
+
 }

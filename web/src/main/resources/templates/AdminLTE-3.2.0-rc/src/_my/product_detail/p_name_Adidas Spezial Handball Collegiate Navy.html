@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../css/product_detail.css">
+</head>
+
+  <!--구매 버튼 클릭 이벤트-->
+  <!-- Matomo Tag Manager -->
+  <script>
+    var _mtm = window._mtm = window._mtm || [];
+    _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
+    (function() {
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.async=true; g.src='http://172.28.0.4/js/container_9KD9SNRT.js'; s.parentNode.insertBefore(g,s);
+    })();
+  </script>
+  <!-- End Matomo Tag Manager -->
+<body>
+
+
+<img src="../../images/Adidas%20Spezial%20Handball%20Collegiate%20Navy.webp" alt="제트스트림">
+
+
+<div class="product-name">
+  Adidas Spezial Handball Collegiate Navy
+</div>
+
+    <div class="product-price">
+      115,000원
+    </div>
+
+<div class="product-options">
+  <label for="options">옵션 선택:</label>
+  <select id="options" name="options">
+    <option value="option1">230</option>
+    <option value="option2">240</option>
+    <option value="option3">250</option>
+    <option value="option2">260</option>
+    <option value="option3">270</option>
+    <option value="option3">280</option>
+
+  </select>
+</div>
+
+
+<div class="quantity">
+    <button class="minus-btn" type="button">-</button>
+    <input class="quantity-input" type="text" value="1">
+    <button class="plus-btn" type="button">+</button>
+</div>
+
+
+<button class="purchase-button" name="purchase" onclick="location.href='/list'">구매</button>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const minusBtn = document.querySelector('.minus-btn');
+    const plusBtn = document.querySelector('.plus-btn');
+    const quantityInput = document.querySelector('.quantity-input');
+
+    minusBtn.addEventListener('click', function() {
+        let currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+        }
+    });
+
+    plusBtn.addEventListener('click', function() {
+        let currentValue = parseInt(quantityInput.value);
+        quantityInput.value = currentValue + 1;
+    });
+});
+
+</script>
+
+</body>
+
+</html>
