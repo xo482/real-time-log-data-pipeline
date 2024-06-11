@@ -11,6 +11,8 @@ public class SuccessLog {
     @Column(name = "success_log_id")
     private Long id;
 
+    private Long scenario_id;
+
     @Column(name = "message", nullable = false)
     private String message;
 
