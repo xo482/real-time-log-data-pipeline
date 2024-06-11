@@ -19,7 +19,8 @@ public class FailureLog {
 
     public FailureLog() {}
 
-    public FailureLog(String message) {
+    public FailureLog(Long scenario_id, String message) {
+        this.scenario_id = scenario_id;
         this.message = message;
     }
 }

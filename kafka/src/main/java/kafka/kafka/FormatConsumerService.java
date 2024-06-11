@@ -20,18 +20,16 @@ public class FormatConsumerService {
     private static final String NEXT_TOPIC = "filter_topic";
 
     private final KafkaTemplate<String, String> kafkaTemplate;
-
     private final ScenarioRepository scenarioRepository;
-
     private ObjectMapper objectMapper = new ObjectMapper();
-
 
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
     public void listen(String message) {
         System.out.println("========================================== format ==========================================");
         System.out.println("Received message: " + message);
 
-        Scenario scenario = scenarioRepository.findById(1L).orElse(null);
+        Long scenario_id = 1L;
+        Scenario scenario = scenarioRepository.findById(scenario_id).orElse(null);
         // LogFormatRepository에서 id가 1인 데이터를 가져옴
         LogFormat logFormat = scenario.getLogFormat();
         if (logFormat == null) {

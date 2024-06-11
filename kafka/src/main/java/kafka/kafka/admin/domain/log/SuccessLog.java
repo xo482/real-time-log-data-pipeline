@@ -18,7 +18,8 @@ public class SuccessLog {
 
     public SuccessLog() {}
 
-    public SuccessLog(String message) {
+    public SuccessLog(Long scenario_id, String message) {
+        this.scenario_id = scenario_id;
         this.message = message;
     }
 }
