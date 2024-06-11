@@ -1,6 +1,6 @@
-package kafka.kafka.repository;
+package kafka.kafka.shoppingmall.repository;
 
-import kafka.kafka.domain.Member;
+import kafka.kafka.shoppingmall.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

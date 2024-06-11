@@ -1,4 +1,4 @@
-package web.web.domain;
+package web.web.shoppingmall.domain;
 
 public enum Gender {
     MALE, FEMALE

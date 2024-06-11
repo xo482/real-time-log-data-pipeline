@@ -1,4 +1,4 @@
-package kafka.kafka.domain;
+package web.web.shoppingmall.domain;
 
 
 public enum Category {

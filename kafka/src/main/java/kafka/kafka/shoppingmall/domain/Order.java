@@ -1,4 +1,4 @@
-package kafka.kafka.domain;
+package kafka.kafka.shoppingmall.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;

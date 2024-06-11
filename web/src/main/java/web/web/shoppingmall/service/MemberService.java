@@ -1,9 +1,9 @@
-package web.web.service;
+package web.web.shoppingmall.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import web.web.domain.Member;
-import web.web.repository.MemberRepository;
+import web.web.shoppingmall.domain.Member;
+import web.web.shoppingmall.repository.MemberRepository;
 
 import java.util.Optional;
 

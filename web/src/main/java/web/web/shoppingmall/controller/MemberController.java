@@ -1,4 +1,4 @@
-package web.web.controller;
+package web.web.shoppingmall.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -7,8 +7,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import web.web.domain.Member;
-import web.web.service.MemberService;
+import web.web.shoppingmall.domain.Member;
+import web.web.shoppingmall.service.MemberService;
 
 import java.util.Optional;
 

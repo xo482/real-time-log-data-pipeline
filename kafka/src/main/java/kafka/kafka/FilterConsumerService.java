@@ -11,9 +11,9 @@ import kafka.kafka.admin.domain.log.SuccessLog;
 import kafka.kafka.admin.repository.FailureLogRepository;
 import kafka.kafka.admin.repository.ScenarioRepository;
 import kafka.kafka.admin.repository.SuccessLogRepository;
-import kafka.kafka.domain.Gender;
-import kafka.kafka.domain.Member;
-import kafka.kafka.repository.MemberRepository;
+import kafka.kafka.shoppingmall.domain.Gender;
+import kafka.kafka.shoppingmall.domain.Member;
+import kafka.kafka.shoppingmall.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import java.util.List;
 
 @Service
@@ -190,4 +189,5 @@ public class FilterConsumerService {
                 throw new IllegalArgumentException("Invalid operator for age comparison: " + operator);
         }
     }
+
 }

@@ -1,4 +1,4 @@
-package web.web.domain;
+package web.web.shoppingmall.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
