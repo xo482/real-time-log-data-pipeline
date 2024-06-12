@@ -3,7 +3,9 @@ package web.web.visualization;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import web.web.admin.domain.NumberOfVisitors;
 import web.web.admin.repository.FailureLogRepository;
+import web.web.admin.repository.NumberOfVisitorRepository;
 import web.web.admin.repository.SuccessLogRepository;
 import web.web.shoppingmall.domain.Order;
 import web.web.shoppingmall.repository.MemberRepository;
@@ -20,6 +22,7 @@ public class VisualizationService {
     private final FailureLogRepository failureLogRepository;
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
+    private final NumberOfVisitorRepository numberOfVisitorRepository;
 
     public Long[] logCount() {
         Long[] list = new Long[2];
@@ -50,5 +53,10 @@ public class VisualizationService {
         }
 
         return count;
+    }
+
+    public Long pageView() {
+        NumberOfVisitors numberOfVisitors = numberOfVisitorRepository.findById(1L).get();
+        return numberOfVisitors.getCount();
     }
 }

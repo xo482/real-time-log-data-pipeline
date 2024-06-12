@@ -33,8 +33,23 @@ public class HomeController {
         Long orderCount = visualizationService.dayOrderCount();
         model.addAttribute("orderCount", orderCount);
 
+        Long visitorCount = visualizationService.pageView();
+        model.addAttribute("visitorCount", visitorCount);
+
         return "/AdminLTE-3.2.0-rc/src/_my/index";
     }
+
+    @GetMapping("/managerCenter")
+    public String adminPage() {
+        return "AdminLTE-3.2.0-rc/src/_my/widgets"; // widgets.html로 이동
+    }
+
+
+    @GetMapping("/settings")
+    public String settings() {
+        return "AdminLTE-3.2.0-rc/src/_my/settings"; // widgets.html로 이동
+    }
+
 
 
     @GetMapping("/product_detail/p_name_Adidas Spezial Handball Collegiate Navy")
@@ -45,5 +60,22 @@ public class HomeController {
     @GetMapping("/list")
     public String list(){
         return "/AdminLTE-3.2.0-rc/src/_my/shopping_list";
+    }
+
+
+    @GetMapping("/login")
+    public String login() {
+        return "AdminLTE-3.2.0-rc/src/_my/login";
+    }
+
+    @GetMapping("/sign_up")
+    public String sign_up() {
+        return "AdminLTE-3.2.0-rc/src/_my/sign_up";
+    }
+
+
+    @GetMapping("/shopping_list")
+    public String shopping_list() {
+        return "AdminLTE-3.2.0-rc/src/_my/shopping_list";
     }
 }

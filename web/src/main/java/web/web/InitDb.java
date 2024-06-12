@@ -29,6 +29,7 @@ public class InitDb {
         initService.dbInit3();
         initService.dbInit4();
         initService.dbInit5();
+        initService.dbInit6();
     }
 
     @Component
@@ -90,6 +91,12 @@ public class InitDb {
             Order order2 = new Order();
             order2.setOrderDate(now);
             em.persist(order2);
+        }
+
+        public void dbInit6() {
+            NumberOfVisitors numberOfVisitors = new NumberOfVisitors();
+            numberOfVisitors.setCount(1000L);
+            em.persist(numberOfVisitors);
         }
     }
 }
