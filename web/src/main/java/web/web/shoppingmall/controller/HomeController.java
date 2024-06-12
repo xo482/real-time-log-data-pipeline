@@ -20,10 +20,14 @@ public class HomeController {
     @GetMapping("/adminPage")
     public String adminPage(Model model){
 
+        // 성공, 실패 그래프 데이터 전달
         Long[] countList = visualizationService.logCount();
-
         model.addAttribute("success", countList[0]);
         model.addAttribute("failure", countList[1]);
+
+        // 회원 수 전달
+        Long memberCount = visualizationService.memberCount();
+        model.addAttribute("memberCount", memberCount);
 
         return "/AdminLTE-3.2.0-rc/src/_my/index";
     }
