@@ -78,4 +78,10 @@ public class HomeController {
     public String shopping_list() {
         return "AdminLTE-3.2.0-rc/src/_my/shopping_list";
     }
+
+
+    @GetMapping("/myLogin")
+    public String myLogin() {
+        return "AdminLTE-3.2.0-rc/index";
+    }
 }
