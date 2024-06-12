@@ -1,21 +1,22 @@
 package web.web.visualization;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
 import web.web.admin.repository.FailureLogRepository;
 import web.web.admin.repository.SuccessLogRepository;
 
-@Controller
+@Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class Visualization {
+public class VisualizationService {
     private final SuccessLogRepository successLogRepository;
     private final FailureLogRepository failureLogRepository;
 
-    @GetMapping("/visualization")
-    private void visualization() {
-
+    public Long[] logCount() {
+        Long[] list = new Long[2];
+        list[0] = successLogRepository.count();
+        list[1] = failureLogRepository.count();
+        return list;
     }
 }

@@ -4,15 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import web.web.admin.repository.FailureLogRepository;
-import web.web.admin.repository.SuccessLogRepository;
+import web.web.visualization.VisualizationService;
 
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
 
-    private final SuccessLogRepository successLogRepository;
-    private final FailureLogRepository failureLogRepository;
+    private final VisualizationService visualizationService;
 
     @GetMapping("/")
     public String home(){
@@ -22,11 +20,10 @@ public class HomeController {
     @GetMapping("/adminPage")
     public String adminPage(Model model){
 
-        long success = successLogRepository.count();
-        long failure = failureLogRepository.count();
+        Long[] countList = visualizationService.logCount();
 
-        model.addAttribute("success", success);
-        model.addAttribute("failure", failure);
+        model.addAttribute("success", countList[0]);
+        model.addAttribute("failure", countList[1]);
 
         return "/AdminLTE-3.2.0-rc/src/_my/index";
     }
