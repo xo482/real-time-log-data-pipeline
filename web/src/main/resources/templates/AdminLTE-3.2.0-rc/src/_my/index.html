@@ -28,6 +28,70 @@
 
   <!-- jQuery -->
   <script src="../../plugins/jquery/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <script th:inline="javascript">
+    var myChart;
+
+    function drawChart() {
+      var success = /*[[${success}]]*/ 0; // Thymeleaf 템플릿 문법을 사용하여 성공 횟수 가져오기
+      var failure = /*[[${failure}]]*/ 0; // Thymeleaf 템플릿 문법을 사용하여 실패 횟수 가져오기
+
+      // 차트 데이터 설정
+      var chartData = [
+        { value: success, name: 'Success' },
+        { value: failure, name: 'Failure' }
+      ];
+
+      // ECharts 인스턴스 초기화
+      myChart = echarts.init(document.getElementById('chartContainer'));
+
+      // 차트 옵션 설정
+      var option = {
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          top: '5%',
+          left: 'center'
+        },
+        series: [
+          {
+            name: 'Result',
+            type: 'pie',
+            radius: ['40%', '70%'],
+            avoidLabelOverlap: false,
+            padAngle: 5,
+            itemStyle: {
+              borderRadius: 10
+            },
+            label: {
+              show: false,
+              position: 'center'
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: 20,
+                fontWeight: 'bold'
+              }
+            },
+            labelLine: {
+              show: false
+            },
+            data: chartData
+          }
+        ]
+      };
+
+      // 차트에 옵션 적용
+      myChart.setOption(option);
+    }
+
+    // 페이지 로드 시 차트 그리기
+    window.onload = function() {
+      drawChart();
+    };
+  </script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -172,30 +236,13 @@
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-chart-pie mr-1"></i>
-                  Sales
+                  시나리오 성공 비율
                 </h3>
-                <div class="card-tools">
-                  <ul class="nav nav-pills ml-auto">
-                    <li class="nav-item">
-                      <a class="nav-link active" href="#revenue-chart" data-toggle="tab">Area</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#sales-chart" data-toggle="tab">Donut</a>
-                    </li>
-                  </ul>
-                </div>
               </div><!-- /.card-header -->
               <div class="card-body">
-                <div class="tab-content p-0">
-                  <!-- Morris chart - Sales -->
-                  <div class="chart tab-pane active" id="revenue-chart"
-                       style="position: relative; height: 300px;">
-                    <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas>
-                  </div>
-                  <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;">
-                    <canvas id="sales-chart-canvas" height="300" style="height: 300px;"></canvas>
-                  </div>
-                </div>
+
+                <div id="chartContainer" style="height: 300px;"></div><!-- 파이차트를 표시할 요소 -->
+
               </div><!-- /.card-body -->
             </div>
           </section>
