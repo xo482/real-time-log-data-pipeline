@@ -29,6 +29,10 @@ public class HomeController {
         Long memberCount = visualizationService.memberCount();
         model.addAttribute("memberCount", memberCount);
 
+        // 새로운 주문 건 수 전달
+        Long orderCount = visualizationService.dayOrderCount();
+        model.addAttribute("orderCount", orderCount);
+
         return "/AdminLTE-3.2.0-rc/src/_my/index";
     }
 

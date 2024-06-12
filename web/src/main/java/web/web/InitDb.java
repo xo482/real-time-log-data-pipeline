@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import web.web.admin.domain.*;
 import web.web.shoppingmall.domain.Gender;
 import web.web.shoppingmall.domain.Member;
+import web.web.shoppingmall.domain.Order;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class InitDb {
         initService.dbInit2();
         initService.dbInit3();
         initService.dbInit4();
+        initService.dbInit5();
     }
 
     @Component
@@ -73,6 +76,20 @@ public class InitDb {
 
             Scenario scenario = Scenario.createScenario(title, manager, status, logicalOperator, logFormat, filters);
             em.persist(scenario);
+        }
+
+        public void dbInit5() {
+            // 현재 날짜와 시간 가져오기
+            LocalDateTime now = LocalDateTime.now();
+            // 어제의 날짜와 시간 계산
+            LocalDateTime yesterday = now.minusDays(1);
+            Order order = new Order();
+            order.setOrderDate(yesterday);
+            em.persist(order);
+
+            Order order2 = new Order();
+            order2.setOrderDate(now);
+            em.persist(order2);
         }
     }
 }
