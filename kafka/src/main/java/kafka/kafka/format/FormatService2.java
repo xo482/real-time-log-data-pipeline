@@ -1,4 +1,4 @@
-package kafka.kafka;
+package kafka.kafka.format;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import kafka.kafka.admin.domain.LogFormat;
@@ -14,10 +14,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 @RequiredArgsConstructor
-public class FormatConsumerService {
+public class FormatService2 {
 
-    private static final String TOPIC_NAME = "format_topic";
-    private static final String NEXT_TOPIC = "filter_topic";
+    private static final String TOPIC_NAME = "format_topic_2";
+    private static final String NEXT_TOPIC = "filter_topic_2";
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ScenarioRepository scenarioRepository;
@@ -25,12 +25,12 @@ public class FormatConsumerService {
 
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
     public void listen(String message) {
-        System.out.println("========================================== format ==========================================");
+        System.out.println("========================================== scenario_format_2 ==========================================");
         System.out.println("Received message: " + message);
 
-        Long scenario_id = 1L;
+        Long scenario_id = 2L;
         Scenario scenario = scenarioRepository.findById(scenario_id).orElse(null);
-        // LogFormatRepository에서 id가 1인 데이터를 가져옴
+        // LogFormatRepository에서 id가 2인 데이터를 가져옴
         LogFormat logFormat = scenario.getLogFormat();
         if (logFormat == null) {
             System.err.println("LogFormat not found");
@@ -106,4 +106,5 @@ public class FormatConsumerService {
         }
     }
 }
+
 

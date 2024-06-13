@@ -27,7 +27,8 @@ public class InitDb {
         initService.dbInit1();
         initService.dbInit2();
         initService.dbInit3();
-        initService.dbInit4();
+        initService.InitScenario1();
+        initService.InitScenario2();
         initService.dbInit5();
         initService.dbInit6();
     }
@@ -53,7 +54,26 @@ public class InitDb {
             em.persist(member);
         }
 
-        public void dbInit4() {
+        public void InitScenario1() {
+            LogFormat logFormat = new LogFormat();
+            logFormat.setDate(1);
+            logFormat.setHTTP_USER_AGENT(1);
+            em.persist(logFormat);
+
+            Filter filter1 = new Filter("HTTP_USER_AGENT", "contains", "Chrom");
+
+            List<Filter> filters = new ArrayList<>();
+            filters.add(filter1);
+
+            String title = "크롬으로 들어와 구매 버튼을 누른 사람의 비율은?";
+            String manager = "홍길동";
+            Status status = Status.RUN;
+            LogicalOperator logicalOperator = LogicalOperator.AND;
+
+            Scenario scenario = Scenario.createScenario(title, manager, status, logicalOperator, logFormat, filters);
+            em.persist(scenario);
+        }
+        public void InitScenario2() {
             LogFormat logFormat = new LogFormat();
             logFormat.setE_n(1);
             logFormat.setH(1);
@@ -63,7 +83,8 @@ public class InitDb {
 
             Filter filter1 = new Filter("age", ">", "20");
             Filter filter2 = new Filter("gender", "==", "MALE");
-            Filter filter3 = new Filter("h", ">=", "13");
+            Filter filter3 = new Filter("h", ">=", "10");
+
 
             List<Filter> filters = new ArrayList<>();
             filters.add(filter1);
@@ -78,6 +99,7 @@ public class InitDb {
             Scenario scenario = Scenario.createScenario(title, manager, status, logicalOperator, logFormat, filters);
             em.persist(scenario);
         }
+
 
         public void dbInit5() {
             // 현재 날짜와 시간 가져오기

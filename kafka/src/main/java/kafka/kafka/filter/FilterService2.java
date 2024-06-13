@@ -1,4 +1,4 @@
-package kafka.kafka;
+package kafka.kafka.filter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,9 +23,9 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class FilterConsumerService {
+public class FilterService2 {
 
-    private static final String TOPIC_NAME = "filter_topic";
+    private static final String TOPIC_NAME = "filter_topic_2";
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ScenarioRepository scenarioRepository;
@@ -41,10 +41,10 @@ public class FilterConsumerService {
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
     @Transactional
     public void listen(String message) {
-        System.out.println("========================================== filter ==========================================");
+        System.out.println("========================================== scenario_filter_2 ==========================================");
         System.out.println("Received message: " + message);
 
-        Long scenario_id = 1L;
+        Long scenario_id = 2L;
         Scenario scenario = scenarioRepository.findById(scenario_id).orElse(null);
 
         // 필터링 정보 가져오기
@@ -59,8 +59,11 @@ public class FilterConsumerService {
             jsonNode = objectMapper.readTree(message);
 
             // 고객 가져오기
-            Long memberId = jsonNode.get("memberId").asLong();
-            if (memberId != 0) {
+            Long memberId = 0L;
+            if (jsonNode.has("memberId")) {
+                memberId = jsonNode.get("memberId").asLong();
+            }
+            if (memberId != 0L) {
                 member = memberRepository.findById(memberId).get();
             }
 
@@ -152,6 +155,7 @@ public class FilterConsumerService {
         }
 
         Gender gender = member.getGender();
+        System.out.println("gender = " + gender);
         String genderStr = gender.toString();
         switch (operator) {
             case "==":
@@ -170,6 +174,7 @@ public class FilterConsumerService {
         }
 
         int age = Integer.parseInt(member.getAge());
+        System.out.println("age = " + age);
         int comparisonAge = Integer.parseInt(right);
         switch (operator) {
             case ">":

@@ -3,8 +3,6 @@ package kafka.kafka;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import kafka.kafka.admin.domain.Scenario;
-import kafka.kafka.admin.domain.Status;
 import kafka.kafka.admin.repository.ScenarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -16,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class KafkaConsumerService {
 
     private static final String TOPIC_NAME = "start_topic";
-    private static final String NEXT_TOPIC = "format_topic";
+    private static final String[] NEXT_TOPIC_List = new String[]{"scenario_topic_1", "scenario_topic_2", "scenario_topic_3"};
     private static final String PAGEVIEW_TOPIC = "pageView_topic";
 
     private final KafkaTemplate<String, String> kafkaTemplate;
@@ -29,19 +27,8 @@ public class KafkaConsumerService {
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
     public void listen(String message) {
         // 메시지 출력
-        System.out.println("========================================== start ==========================================");
+        System.out.println("========================================== hub ==========================================");
         System.out.println("Received message: " + message);
-
-        Long scenario_id = 1L;
-        Scenario scenario = scenarioRepository.findById(scenario_id).orElse(null);
-        if (scenario == null) {
-            System.err.println("scenario not found");
-            return;
-        }
-        if (scenario.getStatus() == Status.PAUSE){
-            System.err.println("Scenario paused");
-            return;
-        }
 
 
         try {
@@ -58,7 +45,7 @@ public class KafkaConsumerService {
                     pathValue = logMessage.split("path=")[1].split(" ")[0].split("/")[1];
                 }
 
-                if(pathValue.equals("buttonClicked")) {
+                if(pathValue.equals("event")) {
                     // "params=" 이후의 문자열을 추출
                     String[] parts = logMessage.split("params=");
                     if (parts.length > 1) {
@@ -78,7 +65,9 @@ public class KafkaConsumerService {
                         System.out.println("After parsing: " + paramsJson);
 
                         // 다음 토픽으로 전송
-                        kafkaTemplate.send(NEXT_TOPIC, paramsJson.toString());
+                        for (String nextTopic : NEXT_TOPIC_List) {
+                            kafkaTemplate.send(nextTopic, paramsJson.toString());
+                        }
                     } else {
                         System.out.println("The message does not contain 'params='.");
                     }
