@@ -29,6 +29,13 @@ public class HomeController {
         Long memberCount = visualizationService.memberCount();
         model.addAttribute("memberCount", memberCount);
 
+        // 새로운 주문 건 수 전달
+        Long orderCount = visualizationService.dayOrderCount();
+        model.addAttribute("orderCount", orderCount);
+
+        Long visitorCount = visualizationService.pageView();
+        model.addAttribute("visitorCount", visitorCount);
+
         return "/AdminLTE-3.2.0-rc/src/_my/index";
     }
 
@@ -41,5 +48,28 @@ public class HomeController {
     @GetMapping("/list")
     public String list(){
         return "/AdminLTE-3.2.0-rc/src/_my/shopping_list";
+    }
+
+
+    @GetMapping("/login")
+    public String login() {
+        return "AdminLTE-3.2.0-rc/src/_my/login";
+    }
+
+    @GetMapping("/sign_up")
+    public String sign_up() {
+        return "AdminLTE-3.2.0-rc/src/_my/sign_up";
+    }
+
+
+    @GetMapping("/shopping_list")
+    public String shopping_list() {
+        return "AdminLTE-3.2.0-rc/src/_my/shopping_list";
+    }
+
+
+    @GetMapping("/myLogin")
+    public String myLogin() {
+        return "AdminLTE-3.2.0-rc/index";
     }
 }

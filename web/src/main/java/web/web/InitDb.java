@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import web.web.admin.domain.*;
 import web.web.shoppingmall.domain.Gender;
 import web.web.shoppingmall.domain.Member;
+import web.web.shoppingmall.domain.Order;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,10 @@ public class InitDb {
         initService.dbInit1();
         initService.dbInit2();
         initService.dbInit3();
-        initService.dbInit4();
+        initService.InitScenario1();
+        initService.InitScenario2();
+        initService.dbInit5();
+        initService.dbInit6();
     }
 
     @Component
@@ -49,7 +54,26 @@ public class InitDb {
             em.persist(member);
         }
 
-        public void dbInit4() {
+        public void InitScenario1() {
+            LogFormat logFormat = new LogFormat();
+            logFormat.setDate(1);
+            logFormat.setHTTP_USER_AGENT(1);
+            em.persist(logFormat);
+
+            Filter filter1 = new Filter("HTTP_USER_AGENT", "contains", "Chrome");
+
+            List<Filter> filters = new ArrayList<>();
+            filters.add(filter1);
+
+            String title = "크롬으로 들어와 구매 버튼을 누른 사람의 비율은?";
+            String manager = "홍길동";
+            Status status = Status.RUN;
+            LogicalOperator logicalOperator = LogicalOperator.AND;
+
+            Scenario scenario = Scenario.createScenario(title, manager, status, logicalOperator, logFormat, filters);
+            em.persist(scenario);
+        }
+        public void InitScenario2() {
             LogFormat logFormat = new LogFormat();
             logFormat.setE_n(1);
             logFormat.setH(1);
@@ -60,6 +84,7 @@ public class InitDb {
             Filter filter1 = new Filter("age", ">", "20");
             Filter filter2 = new Filter("gender", "==", "MALE");
             Filter filter3 = new Filter("h", ">=", "13");
+
 
             List<Filter> filters = new ArrayList<>();
             filters.add(filter1);
@@ -73,6 +98,27 @@ public class InitDb {
 
             Scenario scenario = Scenario.createScenario(title, manager, status, logicalOperator, logFormat, filters);
             em.persist(scenario);
+        }
+
+
+        public void dbInit5() {
+            // 현재 날짜와 시간 가져오기
+            LocalDateTime now = LocalDateTime.now();
+            // 어제의 날짜와 시간 계산
+            LocalDateTime yesterday = now.minusDays(1);
+            Order order = new Order();
+            order.setOrderDate(yesterday);
+            em.persist(order);
+
+            Order order2 = new Order();
+            order2.setOrderDate(now);
+            em.persist(order2);
+        }
+
+        public void dbInit6() {
+            NumberOfVisitors numberOfVisitors = new NumberOfVisitors();
+            numberOfVisitors.setCount(1000L);
+            em.persist(numberOfVisitors);
         }
     }
 }

@@ -1,4 +1,4 @@
-package kafka.kafka;
+package kafka.kafka.format;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import kafka.kafka.admin.domain.LogFormat;
@@ -14,10 +14,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 @RequiredArgsConstructor
-public class FormatConsumerService {
+public class FormatService1 {
 
-    private static final String TOPIC_NAME = "format_topic";
-    private static final String NEXT_TOPIC = "filter_topic";
+    private static final String TOPIC_NAME = "format_topic_1";
+    private static final String NEXT_TOPIC = "filter_topic_1";
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ScenarioRepository scenarioRepository;
@@ -25,8 +25,7 @@ public class FormatConsumerService {
 
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
     public void listen(String message) {
-        System.out.println("========================================== format ==========================================");
-        System.out.println("Received message: " + message);
+        System.out.println("scenario_format_1: " + message);
 
         Long scenario_id = 1L;
         Scenario scenario = scenarioRepository.findById(scenario_id).orElse(null);
@@ -95,7 +94,6 @@ public class FormatConsumerService {
             if (logFormat.getHTTP_CONNECTION() == 1) newJson.set("HTTP_CONNECTION", jsonNode.get("HTTP_CONNECTION"));
             if (logFormat.getDate() == 1) newJson.set("date", jsonNode.get("date"));
 
-            System.out.println("After parsing: " + newJson);
 
             // 새로운 JSON 객체를 문자열로 변환하여 다음 토픽으로 전송
             String newMessage = objectMapper.writeValueAsString(newJson);

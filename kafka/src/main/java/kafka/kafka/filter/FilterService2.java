@@ -1,4 +1,4 @@
-package kafka.kafka;
+package kafka.kafka.filter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,9 +23,9 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class FilterConsumerService {
+public class FilterService2 {
 
-    private static final String TOPIC_NAME = "filter_topic";
+    private static final String TOPIC_NAME = "filter_topic_2";
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ScenarioRepository scenarioRepository;
@@ -41,10 +41,9 @@ public class FilterConsumerService {
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
     @Transactional
     public void listen(String message) {
-        System.out.println("========================================== filter ==========================================");
-        System.out.println("Received message: " + message);
+        System.out.println("scenario_filter_2: " + message);
 
-        Long scenario_id = 1L;
+        Long scenario_id = 2L;
         Scenario scenario = scenarioRepository.findById(scenario_id).orElse(null);
 
         // 필터링 정보 가져오기
@@ -59,8 +58,11 @@ public class FilterConsumerService {
             jsonNode = objectMapper.readTree(message);
 
             // 고객 가져오기
-            Long memberId = jsonNode.get("memberId").asLong();
-            if (memberId != 0) {
+            Long memberId = 0L;
+            if (jsonNode.has("memberId")) {
+                memberId = jsonNode.get("memberId").asLong();
+            }
+            if (memberId != 0L) {
                 member = memberRepository.findById(memberId).get();
             }
 
@@ -89,10 +91,10 @@ public class FilterConsumerService {
 
             //== 저장 ==//
             if (flag) {
-                System.out.println("적합하므로 성공 테이블에 저장");
+                System.out.println("scenario_2 : 적합하므로 성공 테이블에 저장");
                 successLogRepository.save(new SuccessLog(scenario_id, jsonNode.toString()));
             } else {
-                System.out.println("적합하지 않으므로 실패 테이블에 저장");
+                System.out.println("scenario_2 : 적합하지 않으므로 실패 테이블에 저장");
                 failureLogRepository.save(new FailureLog(scenario_id, jsonNode.toString()));
             }
 

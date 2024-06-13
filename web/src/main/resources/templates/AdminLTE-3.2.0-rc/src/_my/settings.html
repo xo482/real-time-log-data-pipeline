@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,6 +31,57 @@
 
   <!-- jQuery -->
   <script src="../../plugins/jquery/jquery.min.js"></script>
+
+  <script>
+    let filterIndex = 0;
+
+    function addComboRow() {
+      filterIndex++;
+      const template = `
+        <div class="form-group row combo-row">
+          <div class="col">
+            <select class="form-control" name="filters[${filterIndex}].left">
+              <option value="age">나이</option>
+              <option value="gender">성별</option>
+              <option value="HTTP_USER_AGENT">접속 브라우저</option>
+              <option value="memberId">ID</option>
+              <option value="h">시</option>
+              <option value="m">분</option>
+            </select>
+          </div>
+          <div class="col">
+            <select class="form-control" name="filters[${filterIndex}].operator">
+              <option value="==">==</option>
+              <option value="!=">!=</option>
+              <option value="<="><=</option>
+              <option value=">=">>=</option>
+              <option value="<"><</option>
+              <option value=">">></option>
+              <option value="contains">contains</option>
+              <option value="!contains">!contains</option>
+            </select>
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" name="filters[${filterIndex}].right">
+          </div>
+          <div class="col-auto">
+            <button type="button" class="btn btn-link delete-btn" onclick="deleteRow(this)">
+              삭제
+            </button>
+          </div>
+        </div>`;
+      document.querySelector("#comboRows").insertAdjacentHTML("beforeend", template);
+    }
+
+    function deleteRow(button) {
+      const row = button.closest('.combo-row');
+      row.parentNode.removeChild(row);
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      addComboRow(); // 페이지가 로드될 때 첫 번째 필터 행 추가
+    });
+  </script>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -48,7 +99,7 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index.html" class="brand-link">
+    <a href="/" class="brand-link">
       <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text font-weight-light">SW</span>
     </a>
@@ -60,19 +111,19 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
           <li class="nav-item">
-            <a href="index.html" class="nav-link">
+            <a href="/index" class="nav-link">
               <i class="far fa-circle nav-icon"></i>
               <p>홈</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="widgets.html" class="nav-link">
+            <a href="/adminPage" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>관리 센터</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="log.html" class="nav-link">
+            <a href="/logFormatPage" class="nav-link">
               <i class="nav-icon fas fa-cog"></i>
               <p>로그 포맷</p>
             </a>
@@ -102,188 +153,54 @@
       <div class="container-fluid">
         <div class="card card-primary">
           <div class="card-body">
-            <div class="form-group">
-              <label>시나리오 제목:</label>
-              <div class="input-group mb-3">
-                <div class="input-group-prepend"></div>
-                <input type="text" class="form-control float-right">
-              </div>
-
-              <label>담당자:</label>
-              <div class="input-group mb-3">
-                <div class="input-group-prepend"></div>
-                <input type="text" class="form-control float-right">
-              </div>
-
-              <label>기간:</label>
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="far fa-clock"></i></span>
+            <form th:action="@{/createScenario}" th:object="${scenario}" method="post">
+              <div class="form-group">
+                <label>시나리오 제목:</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend"></div>
+                  <input type="text" th:field="*{title}" class="form-control float-right">
                 </div>
-                <input type="text" class="form-control float-right" id="reservationtime">
+
+                <label>담당자:</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend"></div>
+                  <input type="text" th:field="*{manager}" class="form-control float-right">
+                </div>
+
+                <label>로그 포맷 선택:</label>
+                <div class="input-group mb-3">
+                  <select th:field="*{logFormat}" class="form-control">
+                    <option value="" disabled selected>포맷을 선택하세요</option>
+                    <option th:each="logFormat : ${logFormats}" th:value="${logFormat.id}" th:text="'포맷 ' + ${logFormat.id}"></option>
+                  </select>
+                </div>
+
+                <label>논리 연산자 선택:</label>
+                <div class="input-group mb-3">
+                  <select th:field="*{logicalOperator}" class="form-control">
+                    <option value="" disabled selected>연산자를 선택하세요</option>
+                    <option th:value="'AND'" th:text="'AND'"></option>
+                    <option th:value="'OR'" th:text="'OR'"></option>
+                  </select>
+                </div>
+
+                <label>필터링:</label>
+                <div id="comboRows" class="form-group">
+                  <!-- 필터 행은 자바스크립트로 추가됨 -->
+                </div>
+                <button type="button" class="btn btn-primary" onclick="addComboRow()">추가</button>
+                <button type="submit" class="btn btn-primary">제출</button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
     </section>
     <!-- 기초설정 끝 -->
 
-    <!-- 로그 포맷 선택 -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>로그 포맷 선택</h1>
-          </div>
-        </div>
-        <div class="row mb-2">
-          <div class="col-sm-12">
-            <select id="logFormatSelect" class="form-control">
-              <!-- 옵션은 JavaScript를 통해 동적으로 추가됩니다. -->
-            </select>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- 로그 포맷 선택 끝 -->
-
-    <!-- 필터링 시작 -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>필터링</h1>
-          </div>
-          <!-- 추가 버튼 -->
-          <div class="col-sm-6 text-right">
-            <div class="form-inline justify-content-end">
-              <select class="form-control mr-2" id="andOrSelect">
-                <option value="AND">AND</option>
-                <option value="OR">OR</option>
-              </select>
-              <button type="button" class="btn btn-primary btn-add" onclick="addComboRow()">+</button>
-            </div>
-          </div>
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
-
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <div class="card card-primary">
-          <div class="card-body">
-            <div class="form-group">
-              <!-- 메인 폼 -->
-              <form id="myForm" action="widgets.html" method="post">
-                <div id="comboRows">
-                  <!-- 초기 행 -->
-                </div>
-                <button type="submit" class="btn btn-primary">제출</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- 필터링 끝 -->
-
   </div>
 </div>
 <!-- ./wrapper -->
-
-<!-- 콤보 박스 추가 함수 -->
-<script>
-  // 삭제 버튼 클릭 시 행 삭제 함수
-  function deleteRow(btn) {
-    // 버튼의 부모 요소인 행 삭제
-    var row = btn.closest('.combo-row');
-    row.parentNode.removeChild(row);
-  }
-
-  // 추가 버튼 클릭 시 콤보 박스 행 추가 함수
-  function addComboRow() {
-    var comboRowTemplate = document.getElementById('comboRowTemplate');
-    var newRow = comboRowTemplate.cloneNode(true);
-    newRow.removeAttribute('id');
-    newRow.style.display = 'block';
-
-    // 새로운 행에 삭제 버튼 이벤트 리스너 등록
-    var deleteBtn = newRow.querySelector('.delete-btn');
-    deleteBtn.addEventListener('click', function() {
-      deleteRow(this);
-    });
-
-    var comboRows = document.getElementById('comboRows');
-    comboRows.appendChild(newRow);
-  }
-
-  // 초기 로드 시 초기 행을 추가하는 함수
-  window.onload = function() {
-    addComboRow(); // 페이지가 로드될 때 addComboRow 함수 호출
-  };
-  // 폼 제출 시 처리 함수
-  document.getElementById('myForm').submit = function(event) {
-    // event.preventDefault(); // 폼의 기본 제출 동작 방지
-
-    var form = event.target;
-    var formData = new FormData(form);
-
-    fetch('/widgets.html', {
-      method: 'POST',
-      body: formData
-    })
-      .then(response => response.text())
-      .then(data => {
-        document.write(data); // 응답 데이터를 페이지에 표시
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  };
-</script>
-
-<!-- 콤보 박스 템플릿 -->
-<div id="comboRowTemplate" style="display: none;">
-  <div class="form-group row combo-row">
-
-    <div class="col">
-      <select class="form-control" name="combo1">
-        <option value="option1">ID</option>
-        <option value="option2">상품이름</option>
-        <option value="option3">가격</option>
-        <option value="option4">세일가격</option>
-        <option value="option5">소매가</option>
-        <option value="option6">재고</option>
-      </select>
-    </div>
-
-    <div class="col">
-      <select class="form-control" name="combo2">
-        <option value="option1">=</option>
-        <option value="option2">≠</option>
-        <option value="option3">≤ (이상)</option>
-        <option value="option4">≥ (이하)</option>
-        <option value="option5">< (초과)</option>
-        <option value="option6">> (미만)</option>
-        <option value="option7">포함하는</option>
-        <option value="option8">포함하지 않는</option>
-        <option value="option9">사이</option>
-      </select>
-    </div>
-
-    <div class="col">
-      <input type="text" class="form-control" name="text3">
-    </div>
-
-    <div class="col-auto">
-      <button type="button" class="btn btn-link delete-btn" onclick="deleteRow(this)">
-        삭제
-      </button>
-    </div>
-  </div>
-</div>
 
 <!-- Bootstrap 4 -->
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>

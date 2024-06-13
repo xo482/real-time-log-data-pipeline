@@ -11,14 +11,14 @@ import java.util.List;
 @Getter @Setter
 public class Scenario {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "scenario_id")
     private Long id;
 
     private String title;
     private String manager;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "log_format_id")
     private LogFormat logFormat;
 

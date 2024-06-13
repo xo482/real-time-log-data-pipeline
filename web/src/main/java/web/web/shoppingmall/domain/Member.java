@@ -23,6 +23,7 @@ public class Member {
     private String password;
     private String age;
 
+
     @Enumerated(EnumType.STRING)
     private Gender gender;
 

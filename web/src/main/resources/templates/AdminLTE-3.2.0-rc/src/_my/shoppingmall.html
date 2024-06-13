@@ -1,278 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Shop Homepage - Start Bootstrap Template</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>Shop Homepage - Start Bootstrap Template</title>
+  <!-- Favicon-->
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <!-- Bootstrap icons-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
 
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-        <!-- Font Awesome -->
-        <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
-        <!-- Ionicons -->
-        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-        <!-- Tempusdominus Bootstrap 4 -->
-        <link rel="stylesheet" href="../../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-        <!-- iCheck -->
-        <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-        <!-- JQVMap -->
-        <link rel="stylesheet" href="../../plugins/jqvmap/jqvmap.min.css">
-        <!-- Theme style -->
-        <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
-        <!-- overlayScrollbars -->
-        <link rel="stylesheet" href="../../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-        <!-- Daterange picker -->
-        <link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker.css">
-        <!-- summernote -->
-        <link rel="stylesheet" href="../../plugins/summernote/summernote-bs4.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="../../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="../../plugins/jqvmap/jqvmap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="../../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker.css">
+  <!-- summernote -->
+  <link rel="stylesheet" href="../../plugins/summernote/summernote-bs4.min.css">
 
 
+  <!-- Matomo Tag Manager -->
+  <script>
+    var _mtm = window._mtm = window._mtm || [];
+    _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
+    (function() {
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.async=true; g.src='http://172.28.0.4:80/js/container_VXDKU75K.js'; s.parentNode.insertBefore(g,s);
+    })();
+  </script>
+  <!-- End Matomo Tag Manager -->
 
-        <!-- Matomo -->
-        <script>
-            var _paq = window._paq = window._paq || [];
-            /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-            _paq.push(['trackPageView']);
-            _paq.push(['enableLinkTracking']);
-            (function() {
-                var u="//localhost:8080/";
-                _paq.push(['setTrackerUrl', u+'matomo.php']);
-                _paq.push(['setSiteId', '1']);
-                var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-                g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-            })();
-        </script>
-        <!-- End Matomo Code -->
+</head>
+<body>
 
-        <!-- Matomo Tag Manager -->
-        <script>
-            var _mtm = window._mtm = window._mtm || [];
-            _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
-            (function() {
-                var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-                g.async=true; g.src='http://localhost:8080/js/container_2AITcBMC.js'; s.parentNode.insertBefore(g,s);
-            })();
-        </script>
-        <!-- End Matomo Tag Manager -->
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container px-4 px-lg-5">
+    <a class="navbar-brand" href="/index">Obzen</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a href="/myLogin" class="btn btn-primary btn-sm mr-2" >가라 로그인</a>
+        </li>
+        <li class="nav-item">
+          <a href="/adminPage" class="btn btn-primary btn-sm mr-2" >관리자 페이지</a>
+        </li>
+        <li class="nav-item">
+          <a href="/login" class="btn btn-primary btn-sm mr-2" >로그인</a>
+        </li>
+        <li class="nav-item">
+          <a href="/sign_up" class="btn btn-primary btn-sm mr-2" >회원 가입</a>
+        </li>
+        <li class="nav-item">
 
-    </head>
-    <body>
+          <form class="d-flex" action="shopping_list">
+            <button class="btn btn-primary btn-sm" type="submit">
+              <i class="bi-cart-fill me-1"></i>
+              주문 목록
+              <span class="badge bg-gradient-info text-white ms-1 rounded-pill">0</span>
+            </button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="index.html">Obzen</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                          <a href="/adminPage" class="btn btn-primary btn-sm mr-2" >관리자 페이지</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="login.html" class="btn btn-primary btn-sm mr-2" >로그인</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="sign_up.html" class="btn btn-primary btn-sm mr-2" >회원 가입</a>
-                        </li>
-                        <li class="nav-item">
 
-                            <form class="d-flex" action="shopping_list.html">
-                                <button class="btn btn-primary btn-sm" type="submit">
-                                    <i class="bi-cart-fill me-1"></i>
-                                    주문 목록
-                                    <span class="badge bg-gradient-info text-white ms-1 rounded-pill">0</span>
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
+<!-- Header-->
+<header class="bg-gradient-info py-5">
+  <div class="container px-4 px-lg-5 my-5">
+    <div class="text-center text-white">
+      <h1 class="display-4 fw-bolder">Obzen</h1>
+      <p class="lead fw-normal text-white-50 mb-0">project</p>
+    </div>
+  </div>
+</header>
+<!-- Section-->
+<section class="py-5">
+  <div class="container px-4 px-lg-5 mt-5">
+    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+      <div class="col mb-5">
+        <div class="card h-100">
+          <!-- Product image-->
+          <!-- <img class="card-img-top" src="https://d2gfz7wkiigkmv.cloudfront.net/pickin/2/1/2/hMb5YSk4TPm0QpXC-1trKQ" alt="..." /> -->
+          <img class="card-img-top" src="../src/images/Adidas%20Spezial%20Handball%20Collegiate%20Navy.webp" alt="..." />
+          <!-- Product details-->
+          <div class="card-body p-4">
+            <div class="text-center">
+              <!-- Product name-->
+              <h5 class="fw-bolder">Adidas Spezial Handball Collegiate Navy</h5>
+              <!-- Product price-->
+              115,000원
             </div>
-        </nav>
+          </div>
+          <!-- Product actions-->
+          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+            <div class="text-center"><a class="btn btn-primary mt-auto" href="/product_detail/p_name_Adidas Spezial Handball Collegiate Navy">View details</a></div>
+          </div>
+        </div>
+      </div>
 
-
-        <!-- Header-->
-        <header class="bg-gradient-info py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Obzen</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">project</p>
-                </div>
+      <div class="col mb-5">
+        <div class="card h-100">
+          <!-- Product image-->
+          <img class="card-img-top" src="../src/images/nikee%20air%20force.webp" alt="..." />
+          <!-- Product details-->
+          <div class="card-body p-4">
+            <div class="text-center">
+              <!-- Product name-->
+              <h5 class="fw-bolder">Nike Air Force 1 '07 Low White</h5>
+              <!-- Product price-->
+              117,000원
             </div>
-        </header>
-        <!-- Section-->
-        <section class="py-5">
-          <div class="container px-4 px-lg-5 mt-5">
-            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-              <div class="col mb-5">
-                <div class="card h-100">
-                  <!-- Product image-->
-                  <!-- <img class="card-img-top" src="https://d2gfz7wkiigkmv.cloudfront.net/pickin/2/1/2/hMb5YSk4TPm0QpXC-1trKQ" alt="..." /> -->
-                  <img class="card-img-top" src="../images/Adidas%20Spezial%20Handball%20Collegiate%20Navy.webp" alt="..." />
-                  <!-- Product details-->
-                  <div class="card-body p-4">
-                    <div class="text-center">
-                      <!-- Product name-->
-                      <h5 class="fw-bolder">Adidas Spezial Handball Collegiate Navy</h5>
-                      <!-- Product price-->
-                      115,000원
-                    </div>
-                  </div>
-                  <!-- Product actions-->
-                  <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                    <div class="text-center"><a class="btn btn-primary mt-auto" href="/product_detail/p_name_Adidas Spezial Handball Collegiate Navy">View details</a></div>
-                  </div>
-                </div>
-              </div>
-
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="../images/nikee%20air%20force.webp" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Nike Air Force 1 '07 Low White</h5>
-                                    <!-- Product price-->
-                                  117,000원
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-primary mt-auto" href="#">View details</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="../images/Adidas%20Spezial%20Handball%20Clear%20Pink.webp" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Adidas Spezial Handball Clear Pink</h5>
-                                    <!-- Product price-->
-                                  115,000원
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-primary mt-auto" href="#">View details</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="../images/Adidas%20x%20Sporty%20&%20Rich%20Spezial%20Handball%20Auburn%20Cream%20White.webp" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Adidas x Sporty & Rich Spezial Handball Auburn Cream White</h5>
-                                    <!-- Product price-->
-                                  178,000원
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-primary mt-auto" href="#">View details</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="../images/Nike%20Cortez%20Basic%20SL%20White%20Black.webp" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Sale Item</h5>
-                                    <!-- Product price-->
-                                  79,000원
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-primary mt-auto" href="#">View details</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="../images/Nike%20Dunk%20Low%20Pro%20Premium%20Medium%20Curry.webp" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Nike Dunk Low Pro Premium Medium Curry</h5>
-                                    <!-- Product price-->
-                                  108,000원
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-primary mt-auto" href="#">View options</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="../images/Nike%20Air%20Force%201%20'07%20WB%20Flax.webp" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Nike Air Force 1 '07 WB Flax</h5>
-                                    <!-- Product price-->
-                                  147,000원
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-primary mt-auto" href="#">View details</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="../images/Adidas%20Gazelle%20Solid%20Grey.webp" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Adidas Gazelle Solid Grey</h5>
-                                    <!-- Product price-->
-                                  101,000원
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-primary mt-auto" href="#">View details</a></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          </div>
+          <!-- Product actions-->
+          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+            <div class="text-center"><a class="btn btn-primary mt-auto" href="#">View details</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="col mb-5">
+        <div class="card h-100">
+          <!-- Product image-->
+          <img class="card-img-top" src="../src/images/Adidas%20Spezial%20Handball%20Clear%20Pink.webp" alt="..." />
+          <!-- Product details-->
+          <div class="card-body p-4">
+            <div class="text-center">
+              <!-- Product name-->
+              <h5 class="fw-bolder">Adidas Spezial Handball Clear Pink</h5>
+              <!-- Product price-->
+              115,000원
             </div>
-        </section>
-        <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; pk Website 2024</p></div>
-        </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
-    </body>
+          </div>
+          <!-- Product actions-->
+          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+            <div class="text-center"><a class="btn btn-primary mt-auto" href="/viewdetails">View details</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="col mb-5">
+        <div class="card h-100">
+          <!-- Product image-->
+          <img class="card-img-top" src="../src/images/Adidas%20x%20Sporty%20&%20Rich%20Spezial%20Handball%20Auburn%20Cream%20White.webp" alt="..." />
+          <!-- Product details-->
+          <div class="card-body p-4">
+            <div class="text-center">
+              <!-- Product name-->
+              <h5 class="fw-bolder">Adidas x Sporty & Rich Spezial Handball Auburn Cream White</h5>
+              <!-- Product price-->
+              178,000원
+            </div>
+          </div>
+          <!-- Product actions-->
+          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+            <div class="text-center"><a class="btn btn-primary mt-auto" href="#">View details</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="col mb-5">
+        <div class="card h-100">
+          <!-- Product image-->
+          <img class="card-img-top" src="../src/images/Nike%20Cortez%20Basic%20SL%20White%20Black.webp" alt="..." />
+          <!-- Product details-->
+          <div class="card-body p-4">
+            <div class="text-center">
+              <!-- Product name-->
+              <h5 class="fw-bolder">Nike Cortez Basic SL White Black</h5>
+              <!-- Product price-->
+              79,000원
+            </div>
+          </div>
+          <!-- Product actions-->
+          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+            <div class="text-center"><a class="btn btn-primary mt-auto" href="#">View details</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="col mb-5">
+        <div class="card h-100">
+          <!-- Product image-->
+          <img class="card-img-top" src="../src/images/Nike%20Dunk%20Low%20Pro%20Premium%20Medium%20Curry.webp" alt="..." />
+          <!-- Product details-->
+          <div class="card-body p-4">
+            <div class="text-center">
+              <!-- Product name-->
+              <h5 class="fw-bolder">Nike Dunk Low Pro Premium Medium Curry</h5>
+              <!-- Product price-->
+              108,000원
+            </div>
+          </div>
+          <!-- Product actions-->
+          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+            <div class="text-center"><a class="btn btn-primary mt-auto" href="#">View options</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="col mb-5">
+        <div class="card h-100">
+          <!-- Product image-->
+          <img class="card-img-top" src="../src/images/Nike%20Air%20Force%201%20'07%20WB%20Flax.webp" alt="..." />
+          <!-- Product details-->
+          <div class="card-body p-4">
+            <div class="text-center">
+              <!-- Product name-->
+              <h5 class="fw-bolder">Nike Air Force 1 '07 WB Flax</h5>
+              <!-- Product price-->
+              147,000원
+            </div>
+          </div>
+          <!-- Product actions-->
+          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+            <div class="text-center"><a class="btn btn-primary mt-auto" href="#">View details</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="col mb-5">
+        <div class="card h-100">
+          <!-- Product image-->
+          <img class="card-img-top" src="../src/images/Adidas%20Gazelle%20Solid%20Grey.webp" alt="..." />
+          <!-- Product details-->
+          <div class="card-body p-4">
+            <div class="text-center">
+              <!-- Product name-->
+              <h5 class="fw-bolder">Adidas Gazelle Solid Grey</h5>
+              <!-- Product price-->
+              101,000원
+            </div>
+          </div>
+          <!-- Product actions-->
+          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+            <div class="text-center"><a class="btn btn-primary mt-auto" href="#">View details</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Footer-->
+<footer class="py-5 bg-dark">
+  <div class="container"><p class="m-0 text-center text-white">Copyright &copy; pk Website 2024</p></div>
+</footer>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<!--<script src="js/scripts.js"></script>-->
+</body>
 </html>
-
