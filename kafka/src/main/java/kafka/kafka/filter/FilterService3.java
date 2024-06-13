@@ -1,5 +1,6 @@
 package kafka.kafka.filter;
 
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kafka.kafka.admin.domain.Filter;
@@ -23,9 +24,9 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class FilterService2 {
+public class FilterService3 {
 
-    private static final String TOPIC_NAME = "filter_topic_2";
+    private static final String TOPIC_NAME = "filter_topic_3";
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ScenarioRepository scenarioRepository;
@@ -41,9 +42,9 @@ public class FilterService2 {
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
     @Transactional
     public void listen(String message) {
-        System.out.println("scenario_filter_2: " + message);
+        System.out.println("scenario_filter_3: " + message);
 
-        Long scenario_id = 2L;
+        Long scenario_id = 3L;
         Scenario scenario = scenarioRepository.findById(scenario_id).orElse(null);
 
         // 필터링 정보 가져오기
@@ -91,10 +92,10 @@ public class FilterService2 {
 
             //== 저장 ==//
             if (flag) {
-                System.out.println("scenario_2 : 적합하므로 성공 테이블에 저장");
+                System.out.println("scenario_3 : 적합하므로 성공 테이블에 저장");
                 successLogRepository.save(new SuccessLog(scenario_id, jsonNode.toString()));
             } else {
-                System.out.println("scenario_2 : 적합하지 않으므로 실패 테이블에 저장");
+                System.out.println("scenario_3 : 적합하지 않으므로 실패 테이블에 저장");
                 failureLogRepository.save(new FailureLog(scenario_id, jsonNode.toString()));
             }
 
@@ -192,3 +193,4 @@ public class FilterService2 {
     }
 
 }
+

@@ -41,8 +41,7 @@ public class FilterService1 {
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
     @Transactional
     public void listen(String message) {
-        System.out.println("========================================== scenario_filter_1 ==========================================");
-        System.out.println("Received message: " + message);
+        System.out.println("scenario_filter_1: " + message);
 
         Long scenario_id = 1L;
         Scenario scenario = scenarioRepository.findById(scenario_id).orElse(null);
@@ -93,10 +92,10 @@ public class FilterService1 {
 
             //== 저장 ==//
             if (flag) {
-                System.out.println("적합하므로 성공 테이블에 저장");
+                System.out.println("scenario_1 : 적합하므로 성공 테이블에 저장");
                 successLogRepository.save(new SuccessLog(scenario_id, jsonNode.toString()));
             } else {
-                System.out.println("적합하지 않으므로 실패 테이블에 저장");
+                System.out.println("scenario_1 : 적합하지 않으므로 실패 테이블에 저장");
                 failureLogRepository.save(new FailureLog(scenario_id, jsonNode.toString()));
             }
 
@@ -156,7 +155,6 @@ public class FilterService1 {
         }
 
         Gender gender = member.getGender();
-        System.out.println("gender = " + gender);
         String genderStr = gender.toString();
         switch (operator) {
             case "==":
@@ -175,7 +173,6 @@ public class FilterService1 {
         }
 
         int age = Integer.parseInt(member.getAge());
-        System.out.println("age = " + age);
         int comparisonAge = Integer.parseInt(right);
         switch (operator) {
             case ">":

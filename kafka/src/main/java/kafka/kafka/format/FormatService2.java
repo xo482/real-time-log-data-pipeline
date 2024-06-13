@@ -25,8 +25,7 @@ public class FormatService2 {
 
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
     public void listen(String message) {
-        System.out.println("========================================== scenario_format_2 ==========================================");
-        System.out.println("Received message: " + message);
+        System.out.println("scenario_format_2: " + message);
 
         Long scenario_id = 2L;
         Scenario scenario = scenarioRepository.findById(scenario_id).orElse(null);
@@ -95,7 +94,6 @@ public class FormatService2 {
             if (logFormat.getHTTP_CONNECTION() == 1) newJson.set("HTTP_CONNECTION", jsonNode.get("HTTP_CONNECTION"));
             if (logFormat.getDate() == 1) newJson.set("date", jsonNode.get("date"));
 
-            System.out.println("After parsing: " + newJson);
 
             // 새로운 JSON 객체를 문자열로 변환하여 다음 토픽으로 전송
             String newMessage = objectMapper.writeValueAsString(newJson);

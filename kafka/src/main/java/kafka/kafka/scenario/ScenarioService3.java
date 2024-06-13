@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ScenarioService1 {
+public class ScenarioService3 {
 
-    private static final String TOPIC_NAME = "scenario_topic_1";
-    private static final String NEXT_TOPIC = "format_topic_1";
+    private static final String TOPIC_NAME = "scenario_topic_3";
+    private static final String NEXT_TOPIC = "format_topic_3";
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ScenarioRepository scenarioRepository;
@@ -21,9 +21,9 @@ public class ScenarioService1 {
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
     public void listen(String message) {
         // 메시지 출력
-        System.out.println("scenario_1: " + message);
+        System.out.println("scenario_3: " + message);
 
-        Long scenario_id = 1L;
+        Long scenario_id = 3L;
         Scenario scenario = scenarioRepository.findById(scenario_id).orElse(null);
         if (scenario == null) {
             return;
@@ -36,5 +36,7 @@ public class ScenarioService1 {
         kafkaTemplate.send(NEXT_TOPIC, message);
     }
 }
+
+
 
 

@@ -23,13 +23,11 @@ public class PageViewService {
     @Transactional
     public void listen(String message) {
         // 메시지 출력
-        System.out.println("========================================== visitor ==========================================");
-        System.out.println("Received message: " + message);
 
         NumberOfVisitors numberOfVisitors = numberOfVisitorRepository.findById(1L).get();
         numberOfVisitors.setCount(numberOfVisitors.getCount()+1);
 
-        System.out.println(numberOfVisitors.getCount());
+        System.out.println("pageView - Cumulative number of visitors: " + numberOfVisitors.getCount());
 
     }
 }

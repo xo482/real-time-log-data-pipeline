@@ -27,8 +27,7 @@ public class KafkaConsumerService {
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
     public void listen(String message) {
         // 메시지 출력
-        System.out.println("========================================== hub ==========================================");
-        System.out.println("Received message: " + message);
+        System.out.println("Hub Received message: " + message);
 
 
         try {
@@ -62,7 +61,6 @@ public class KafkaConsumerService {
                         // time 값을 paramsJson에 추가
                         ((ObjectNode) paramsJson).put("date", date);
 
-                        System.out.println("After parsing: " + paramsJson);
 
                         // 다음 토픽으로 전송
                         for (String nextTopic : NEXT_TOPIC_List) {

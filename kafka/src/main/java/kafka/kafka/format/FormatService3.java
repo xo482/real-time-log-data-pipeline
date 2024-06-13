@@ -14,10 +14,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 @RequiredArgsConstructor
-public class FormatService1 {
+public class FormatService3 {
 
-    private static final String TOPIC_NAME = "format_topic_1";
-    private static final String NEXT_TOPIC = "filter_topic_1";
+    private static final String TOPIC_NAME = "format_topic_3";
+    private static final String NEXT_TOPIC = "filter_topic_3";
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ScenarioRepository scenarioRepository;
@@ -25,11 +25,11 @@ public class FormatService1 {
 
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
     public void listen(String message) {
-        System.out.println("scenario_format_1: " + message);
+        System.out.println("scenario_format_3: " + message);
 
-        Long scenario_id = 1L;
+        Long scenario_id = 3L;
         Scenario scenario = scenarioRepository.findById(scenario_id).orElse(null);
-        // LogFormatRepository에서 id가 1인 데이터를 가져옴
+        // LogFormatRepository에서 id가 2인 데이터를 가져옴
         LogFormat logFormat = scenario.getLogFormat();
         if (logFormat == null) {
             System.err.println("LogFormat not found");
@@ -104,4 +104,6 @@ public class FormatService1 {
         }
     }
 }
+
+
 
