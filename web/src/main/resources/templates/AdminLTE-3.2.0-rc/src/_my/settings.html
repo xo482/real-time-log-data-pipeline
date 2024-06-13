@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -114,14 +114,6 @@
                 <div class="input-group-prepend"></div>
                 <input type="text" class="form-control float-right">
               </div>
-
-              <label>기간:</label>
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="far fa-clock"></i></span>
-                </div>
-                <input type="text" class="form-control float-right" id="reservationtime">
-              </div>
             </div>
           </div>
         </div>
@@ -140,7 +132,10 @@
         <div class="row mb-2">
           <div class="col-sm-12">
             <select id="logFormatSelect" class="form-control">
-              <!-- 옵션은 JavaScript를 통해 동적으로 추가됩니다. -->
+              <option value="" disabled selected>포맷을 선택하세요</option>
+              <th:block th:each="logFormat : ${logFormats}">
+                <option th:value="${logFormat.id}" th:text="'포맷 ' + ${logFormat.id}"></option>
+              </th:block>
             </select>
           </div>
         </div>
@@ -250,26 +245,25 @@
 
     <div class="col">
       <select class="form-control" name="combo1">
-        <option value="option1">ID</option>
-        <option value="option2">상품이름</option>
-        <option value="option3">가격</option>
-        <option value="option4">세일가격</option>
-        <option value="option5">소매가</option>
-        <option value="option6">재고</option>
+        <option value="age">나이</option>
+        <option value="gender">성별</option>
+        <option value="http_user_agent">접속 브라우저</option>
+        <option value="memberId">ID</option>
+        <option value="h">시</option>
+        <option value="m">분</option>
       </select>
     </div>
 
     <div class="col">
       <select class="form-control" name="combo2">
-        <option value="option1">=</option>
-        <option value="option2">≠</option>
-        <option value="option3">≤ (이상)</option>
-        <option value="option4">≥ (이하)</option>
-        <option value="option5">< (초과)</option>
-        <option value="option6">> (미만)</option>
-        <option value="option7">포함하는</option>
-        <option value="option8">포함하지 않는</option>
-        <option value="option9">사이</option>
+        <option value="==">==</option>
+        <option value="!=">!=</option>
+        <option value="<="><=</option>
+        <option value=">=">>=</option>
+        <option value="<"><</option>
+        <option value=">">></option>
+        <option value="contains">contains</option>
+        <option value="!contains">!contains</option>
       </select>
     </div>
 

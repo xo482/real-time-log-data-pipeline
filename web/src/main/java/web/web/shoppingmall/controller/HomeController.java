@@ -40,13 +40,6 @@ public class HomeController {
     }
 
 
-    @GetMapping("/settings")
-    public String settings() {
-        return "AdminLTE-3.2.0-rc/src/_my/settings"; // widgets.html로 이동
-    }
-
-
-
     @GetMapping("/product_detail/p_name_Adidas Spezial Handball Collegiate Navy")
     public String detailPage(){
         return "/AdminLTE-3.2.0-rc/src/_my/product_detail/p_name_Adidas Spezial Handball Collegiate Navy";
