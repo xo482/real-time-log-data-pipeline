@@ -39,11 +39,6 @@ public class HomeController {
         return "/AdminLTE-3.2.0-rc/src/_my/index";
     }
 
-    @GetMapping("/managerCenter")
-    public String adminPage() {
-        return "AdminLTE-3.2.0-rc/src/_my/widgets"; // widgets.html로 이동
-    }
-
 
     @GetMapping("/settings")
     public String settings() {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -116,46 +116,18 @@
             <thead>
             <tr>
               <th style="width: 6%">ID</th>
-              <th style="width: 20%">제목</th>
+              <th>제목</th>
               <th style="width: 15%">담당자</th>
-              <th>기간</th>
               <th style="width: 8%" class="text-center">상태</th>
               <th style="width: 25%"></th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>1</td>
-              <td class="ellipsis"><a>20대 여성 소비 트랜드 분석</a></td>
-              <td><a>김성현</a></td>
-              <td class="project_progress"><a>2024.05.07 ~ 2024.05.14 (7)</a></td>
-              <td class="project-state"><span>완료</span></td>
-              <td class="project-actions text-right">
-                <a class="btn btn-primary btn-sm" href="#"><i class="fas fa-play"></i> 실행</a>
-                <a class="btn btn-danger btn-sm" href="#"><i class="fas fa-pause"></i> 중지</a>
-                <a class="btn btn-info btn-sm" href="#"><i class="fas fa-pencil-alt"></i> 수정</a>
-                <a class="btn btn-sm btn-sm" href="#"><i class="fas fa-trash"></i> 삭제</a>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td class="ellipsis"><a>접속 기기 별 선호 카테고리 분석</a></td>
-              <td><a>김성현</a></td>
-              <td class="project_progress"><a>2024.05.06 ~ 2024.05.20 (14)</a></td>
-              <td class="project-state"><span>실행 중</span></td>
-              <td class="project-actions text-right">
-                <a class="btn btn-primary btn-sm" href="#"><i class="fas fa-play"></i> 실행</a>
-                <a class="btn btn-danger btn-sm" href="#"><i class="fas fa-pause"></i> 중지</a>
-                <a class="btn btn-info btn-sm" href="#"><i class="fas fa-pencil-alt"></i> 수정</a>
-                <a class="btn btn-sm btn-sm" href="#"><i class="fas fa-trash"></i> 삭제</a>
-              </td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td class="ellipsis"><a>5월 방문자 수 분석</a></td>
-              <td><a>김성현</a></td>
-              <td class="project_progress ellipsis"><a>2024.05.01 ~ 2024.06.01 (31)</a></td>
-              <td class="project-state"><span>중지</span></td>
+            <tr th:each="scenario : ${scenarios}">
+              <td th:text="${scenario.id}">1</td>
+              <td class="ellipsis"><a th:text="${scenario.title}">20대 여성 소비 트랜드 분석</a></td>
+              <td><a th:text="${scenario.manager}">김성현</a></td>
+              <td class="project-state"><span th:text="${scenario.status}">완료</span></td>
               <td class="project-actions text-right">
                 <a class="btn btn-primary btn-sm" href="#"><i class="fas fa-play"></i> 실행</a>
                 <a class="btn btn-danger btn-sm" href="#"><i class="fas fa-pause"></i> 중지</a>
