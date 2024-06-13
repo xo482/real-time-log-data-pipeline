@@ -1,103 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        html, body {
-         height: 100%; /* 화면의 전체 높이를 사용하도록 설정합니다. */
-         margin: 0;
-         padding: 0;
-     }
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    html, body {
+      height: 100%; /* 화면의 전체 높이를 사용하도록 설정합니다. */
+      margin: 0;
+      padding: 0;
+    }
 
-     .login-wrapper {
-         width: 40%; /* 전체 화면의 60% 크기로 설정합니다. */
-         height: 60%; /* 전체 화면의 60% 크기로 설정합니다. */
-         margin: auto; /* 가운데 정렬합니다. */
-         padding: 40px;
-         box-sizing: border-box;
-         display: flex; /* 요소를 행으로 배치합니다. */
-         flex-direction: column; /* 내부 요소를 세로로 배치합니다. */
-         justify-content: center; /* 수직 가운데 정렬합니다. */
-         align-items: center; /* 수평 가운데 정렬합니다. */
-     }
+    .login-wrapper {
+      width: 40%; /* 전체 화면의 60% 크기로 설정합니다. */
+      height: 60%; /* 전체 화면의 60% 크기로 설정합니다. */
+      margin: auto; /* 가운데 정렬합니다. */
+      padding: 40px;
+      box-sizing: border-box;
+      display: flex; /* 요소를 행으로 배치합니다. */
+      flex-direction: column; /* 내부 요소를 세로로 배치합니다. */
+      justify-content: center; /* 수직 가운데 정렬합니다. */
+      align-items: center; /* 수평 가운데 정렬합니다. */
+    }
 
-     .login-wrapper > h2 {
-         font-size: 24px;
-         color: #0d6efd;
-         margin-bottom: 20px;
-     }
+    .login-wrapper > h2 {
+      font-size: 24px;
+      color: #0d6efd;
+      margin-bottom: 20px;
+    }
 
-     #login-form > input {
-         width: 100%;
-         height: 48px;
-         padding: 0 10px;
-         box-sizing: border-box;
-         margin-bottom: 16px;
-         border-radius: 6px;
-         background-color: #F8F8F8;
-     }
+    #login-form > input {
+      width: 100%;
+      height: 48px;
+      padding: 0 10px;
+      box-sizing: border-box;
+      margin-bottom: 16px;
+      border-radius: 6px;
+      background-color: #F8F8F8;
+    }
 
-     #login-form > input::placeholder {
-         color: #6c757d;
-     }
+    #login-form > input::placeholder {
+      color: #6c757d;
+    }
 
-     #login-form > input[type="submit"] {d
-         color: #fff;
-         font-size: 16px;
-         background-color: #0d6efd;;
-         margin-top: 20px;
-     }
+    #login-form > input[type="submit"] {
+      color: #fff;
+      font-size: 16px;
+      background-color: #0d6efd;;
+      margin-top: 20px;
+    }
 
-     #login-form > input[type="checkbox"] {
-         display: none;
-     }
+    #login-form > input[type="checkbox"] {
+      display: none;
+    }
 
-     #login-form > label {
-         color: #999999;
-     }
+    #login-form > label {
+      color: #999999;
+    }
 
-     #login-form input[type="checkbox"] + label {
-         cursor: pointer;
-         padding-left: 26px;
-         background-image: url("checkbox.png");
-         background-repeat: no-repeat;
-         background-size: contain;
-     }
+    #login-form input[type="checkbox"] + label {
+      cursor: pointer;
+      padding-left: 26px;
+      /*background-image: url("checkbox.png");*/
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
 
-     #login-form input[type="checkbox"]:checked + label {
-         background-image: url("checkbox-active.png");
-         background-repeat: no-repeat;
-         background-size: contain;
-     }
+    #login-form input[type="checkbox"]:checked + label {
+      /*background-image: url("checkbox-active.png");*/
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
 
     #signup-link {
-    margin-top: 10px;
-    font-size: 14px;
-    color: #6c757d;
-    text-decoration: none;
-}
+      margin-top: 10px;
+      font-size: 14px;
+      color: #6c757d;
+      text-decoration: none;
+    }
 
     #signup-link:hover {
-    text-decoration: underline;
-}
+      text-decoration: underline;
+    }
 
-    </style>
+  </style>
 </head>
 
 <body>
 <div class="login-wrapper">
-    <h2>Login</h2>
-    <form method="post" action="서버의url" id="login-form">
-        <input type="text" name="userName" placeholder="Email">
-        <input type="password" name="userPassword" placeholder="Password">
-        <label for="remember-check">
-            <input type="checkbox" id="remember-check">아이디 저장하기
-        </label>
+  <h2>Login</h2>
+  <form method="post" action="/login" id="login-form">
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <label for="remember-check">
+      <input type="checkbox" id="remember-check">아이디 저장하기
+    </label>
+    <input type="submit" value="Login">
+  </form>
 
-        <input type="submit" value="Login">
-    </form>
-    <a href="sign_up.html" id="signup-link">회원가입</a>
+  <div class="message" th:if="${message}">
+    <p th:text="${message}"></p>
+  </div>
+  <div class="error" th:if="${error}">
+    <p th:text="${error}"></p>
+  </div>
+
+  <a href="/sign_up" id="signup-link">회원가입</a>
 
 </div>
 </body>

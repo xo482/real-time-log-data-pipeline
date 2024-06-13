@@ -51,17 +51,6 @@ public class HomeController {
     }
 
 
-    @GetMapping("/login")
-    public String login() {
-        return "AdminLTE-3.2.0-rc/src/_my/login";
-    }
-
-    @GetMapping("/sign_up")
-    public String sign_up() {
-        return "AdminLTE-3.2.0-rc/src/_my/sign_up";
-    }
-
-
     @GetMapping("/shopping_list")
     public String shopping_list() {
         return "AdminLTE-3.2.0-rc/src/_my/shopping_list";
