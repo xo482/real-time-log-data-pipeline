@@ -60,7 +60,7 @@ public class InitDb {
             logFormat.setHTTP_USER_AGENT(1);
             em.persist(logFormat);
 
-            Filter filter1 = new Filter("HTTP_USER_AGENT", "contains", "Chrom");
+            Filter filter1 = new Filter("HTTP_USER_AGENT", "contains", "Chrome");
 
             List<Filter> filters = new ArrayList<>();
             filters.add(filter1);
@@ -83,7 +83,7 @@ public class InitDb {
 
             Filter filter1 = new Filter("age", ">", "20");
             Filter filter2 = new Filter("gender", "==", "MALE");
-            Filter filter3 = new Filter("h", ">=", "10");
+            Filter filter3 = new Filter("h", ">=", "13");
 
 
             List<Filter> filters = new ArrayList<>();
