@@ -21,18 +21,19 @@ public class ScenarioService3 {
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
     public void listen(String message) {
         // 메시지 출력
-        System.out.println("scenario_3: " + message);
 
         Long scenario_id = 3L;
         Scenario scenario = scenarioRepository.findById(scenario_id).orElse(null);
         if (scenario == null) {
+            System.out.println("|  scenario_3  |              |");
             return;
         }
         if (scenario.getStatus() == Status.PAUSE){
-            System.err.println("Scenario paused");
+            System.out.println("|  scenario_3  |    paused    |");
             return;
         }
 
+        System.out.println("|  scenario_3  |     run      |");
         kafkaTemplate.send(NEXT_TOPIC, message);
     }
 }

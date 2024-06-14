@@ -1,12 +1,11 @@
 package web.web.admin.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.expression.ExpressionException;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import web.web.admin.domain.LogFormat;
 import web.web.admin.domain.Scenario;
 import web.web.admin.domain.Status;
@@ -49,6 +48,24 @@ public class ScenarioController {
         );
         scenario.setStatus(Status.RUN);
         scenarioRepository.save(scenario);
+        return "redirect:/managerCenter";
+    }
+
+
+    @PostMapping("scenarios/{id}/status")
+    public String updateStatus(@PathVariable Long id, @RequestParam String status) {
+        Scenario scenario = scenarioRepository.findById(id).orElseThrow(() -> new ExpressionException("Scenario not found"));
+        if (status != null) {
+            scenario.setStatus(Status.valueOf(status));
+            scenarioRepository.save(scenario);
+        }
+        return "redirect:/managerCenter";
+    }
+
+    @GetMapping("scenarios/{id}/delete")
+    public String deleteScenario(@PathVariable Long id) {
+        Scenario scenario = scenarioRepository.findById(id).orElseThrow(() -> new ExpressionException("Scenario not found"));
+        scenarioRepository.delete(scenario);
         return "redirect:/managerCenter";
     }
 }
