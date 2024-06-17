@@ -92,6 +92,110 @@
       drawChart();
     };
   </script>
+
+<!--  실시간 그래프-->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var chartDom = document.getElementById('main');
+      var myChart = echarts.init(chartDom);
+      var option = {
+        title: {
+          text: ''
+        },
+        tooltip: {
+          trigger: 'axis',
+          formatter: function (params) {
+            return params.map(function (item) {
+              return item.marker + item.seriesName + ': ' + item.value[1];
+            }).join('<br/>');
+          },
+          axisPointer: {
+            animation: false
+          }
+        },
+        legend: {
+          data: []
+        },
+        xAxis: {
+          type: 'time',
+          splitLine: {
+            show: false
+          }
+        },
+        yAxis: {
+          type: 'value',
+          boundaryGap: [0, '100%'],
+          splitLine: {
+            show: false
+          }
+        },
+        series: []
+      };
+
+      var seriesData = {};
+
+      function initializeSeries(scenarioId) {
+        if (!seriesData[scenarioId]) {
+          seriesData[scenarioId] = {
+            success: [],
+            failure: []
+          };
+
+          option.series.push({
+            name: 'Scenario ' + scenarioId + ' Success',
+            type: 'line',
+            showSymbol: false,
+            hoverAnimation: false,
+            data: seriesData[scenarioId].success
+          });
+
+          option.series.push({
+            name: 'Scenario ' + scenarioId + ' Failure',
+            type: 'line',
+            showSymbol: false,
+            hoverAnimation: false,
+            data: seriesData[scenarioId].failure
+          });
+
+          option.legend.data.push('Scenario ' + scenarioId + ' Success');
+          option.legend.data.push('Scenario ' + scenarioId + ' Failure');
+        }
+      }
+
+      function fetchLiveData() {
+        fetch('/api/live-count')
+          .then(response => response.json())
+          .then(data => {
+            var currentTime = new Date();
+
+            Object.keys(data).forEach(function (scenarioId) {
+              initializeSeries(scenarioId);
+              var counts = data[scenarioId];
+
+              seriesData[scenarioId].success.push({
+                name: currentTime.toString(),
+                value: [currentTime, counts[0]]
+              });
+              seriesData[scenarioId].failure.push({
+                name: currentTime.toString(),
+                value: [currentTime, counts[1]]
+              });
+
+              if (seriesData[scenarioId].success.length > 20) {
+                seriesData[scenarioId].success.shift();
+                seriesData[scenarioId].failure.shift();
+              }
+            });
+
+            myChart.setOption(option);
+          });
+      }
+
+      myChart.setOption(option);
+      setInterval(fetchLiveData, 2000);
+      fetchLiveData();
+    });
+  </script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -256,7 +360,7 @@
               <div class="card-header border-0">
                 <h3 class="card-title">
                   <i class="fas fa-th mr-1"></i>
-                  Sales Graph
+                  실시간 시나리오 성공, 실패 그래프
                 </h3>
 
                 <div class="card-tools">
@@ -269,7 +373,10 @@
                 </div>
               </div>
               <div class="card-body">
-                <canvas class="chart" id="line-chart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+
+                <!--여기에 새로운 실시간 그래프를 삽입할 것이다.-->
+                <div id="main" style="width: 100%; height: 400px;"></div>
+
               </div>
               <!-- /.card-body -->
               <div hidden="true" class="card-footer bg-transparent">
