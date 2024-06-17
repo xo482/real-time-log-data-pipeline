@@ -41,16 +41,16 @@ public class InitDb {
         private final EntityManager em;
 
         public void dbInit1() {
-            Member member = new Member("memberA","ksh990408@skuniv.ac.kr", "1234!!", "40", Gender.MALE);
+            Member member = new Member("memberA","member1@gmail.com", "1", "40", Gender.MALE);
             em.persist(member);
         }
         public void dbInit2() {
-            Member member = new Member("memberB","qwer4545@gmail.com", "zxczxc789~", "17", Gender.FEMALE);
+            Member member = new Member("memberB","member2@gmail.com", "2", "17", Gender.FEMALE);
             em.persist(member);
         }
 
         public void dbInit3() {
-            Member member = new Member("memberC","asdasd@gmail.com", "348dje3@#$", "22", Gender.FEMALE);
+            Member member = new Member("memberC","member3@gmail.com", "3", "22", Gender.FEMALE);
             em.persist(member);
         }
 
@@ -83,7 +83,7 @@ public class InitDb {
 
             Filter filter1 = new Filter("age", ">", "20");
             Filter filter2 = new Filter("gender", "==", "MALE");
-            Filter filter3 = new Filter("h", ">=", "13");
+            Filter filter3 = new Filter("h", ">=", "9");
 
 
             List<Filter> filters = new ArrayList<>();

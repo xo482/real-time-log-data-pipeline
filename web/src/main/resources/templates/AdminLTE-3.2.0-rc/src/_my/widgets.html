@@ -41,7 +41,6 @@
   </nav>
   <!-- /.navbar -->
 
-
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -80,7 +79,6 @@
     <!-- /.sidebar -->
   </aside>
 
-
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -96,7 +94,6 @@
 
     <!-- Main content -->
     <section class="content">
-
       <!-- Default box -->
       <div class="card">
         <div class="card-header">
@@ -123,16 +120,23 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="scenario : ${scenarios}">
-              <td th:text="${scenario.id}">1</td>
+            <tr th:each="scenario, iterStat : ${scenarios}">
+              <td th:text="${iterStat.index + 1}">1</td>
               <td class="ellipsis"><a th:text="${scenario.title}">20대 여성 소비 트랜드 분석</a></td>
               <td><a th:text="${scenario.manager}">김성현</a></td>
               <td class="project-state"><span th:text="${scenario.status}">완료</span></td>
               <td class="project-actions text-right">
-                <a class="btn btn-primary btn-sm" href="#"><i class="fas fa-play"></i> 실행</a>
-                <a class="btn btn-danger btn-sm" href="#"><i class="fas fa-pause"></i> 중지</a>
-                <a class="btn btn-info btn-sm" href="#"><i class="fas fa-pencil-alt"></i> 수정</a>
-                <a class="btn btn-sm btn-sm" href="#"><i class="fas fa-trash"></i> 삭제</a>
+                <form th:action="@{'/scenarios/' + ${scenario.id} + '/status'}" method="post" style="display: inline;">
+                  <input type="hidden" name="status" value="RUN" />
+                  <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-play"></i> 실행</button>
+                </form>
+                <form th:action="@{'/scenarios/' + ${scenario.id} + '/status'}" method="post" style="display: inline;">
+                  <input type="hidden" name="status" value="PAUSE" />
+                  <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-pause"></i> 중지</button>
+                </form>
+                <form th:action="@{'/scenarios/' + ${scenario.id} + '/delete'}" method="get" style="display: inline;">
+                  <button type="submit" class="btn btn-sm btn-sm"><i class="fas fa-trash"></i> </button>
+                </form>
               </td>
             </tr>
             </tbody>
