@@ -37,13 +37,12 @@ public class VisualizationService {
         return list;
     }
 
-    public Map<Long, Long[]> liveCount() {
-        Map<Long, Long[]> map = new HashMap<>();
+    public Map<Long, Long> liveCount() {
+        Map<Long, Long> map = new HashMap<>();
         List<Long> scenarioIds = scenarioRepository.findAllIds();
         for (Long scenarioId : scenarioIds) {
             Long successLogCount = successLogRepository.countByScenarioId(scenarioId);
-            Long failureLogCount = failureLogRepository.countByScenarioId(scenarioId);
-            map.put(scenarioId, new Long[]{successLogCount, failureLogCount});
+            map.put(scenarioId, successLogCount);
         }
         return map;
     }

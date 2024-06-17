@@ -96,6 +96,8 @@
 <!--  실시간 그래프-->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      console.log("DOMContentLoaded event triggered");
+
       var chartDom = document.getElementById('main');
       var myChart = echarts.init(chartDom);
       var option = {
@@ -117,9 +119,15 @@
           data: []
         },
         xAxis: {
-          type: 'time',
+          type: 'category',
           splitLine: {
             show: false
+          },
+          data: [], // xAxis에 데이터를 추가할 수 있도록 배열을 설정
+          axisLabel: {
+            formatter: function (value) {
+              return value; // 이미 문자열로 변환된 시간 값을 그대로 사용
+            }
           }
         },
         yAxis: {
@@ -133,14 +141,22 @@
       };
 
       var seriesData = {};
-      var maxDataPoints = 10; // 최대 데이터 포인트 수 설정
+      var maxDataPoints = 7; // 최대 데이터 포인트 수 설정
+      var interval = 5000; // 5초 간격
+      var xAxisData = []; // xAxis 데이터 배열
 
       function initializeSeries(scenarioId) {
         if (!seriesData[scenarioId]) {
           seriesData[scenarioId] = {
-            success: [],
-            failure: []
+            success: []
           };
+
+          for (var i = 0; i < maxDataPoints; i++) {
+            seriesData[scenarioId].success.push({
+              name: '',
+              value: ['', 0]
+            });
+          }
 
           option.series.push({
             name: 'Scenario ' + scenarioId + ' Success',
@@ -150,43 +166,39 @@
             data: seriesData[scenarioId].success
           });
 
-          option.series.push({
-            name: 'Scenario ' + scenarioId + ' Failure',
-            type: 'line',
-            showSymbol: false,
-            hoverAnimation: false,
-            data: seriesData[scenarioId].failure
-          });
-
           option.legend.data.push('Scenario ' + scenarioId + ' Success');
-          option.legend.data.push('Scenario ' + scenarioId + ' Failure');
         }
       }
 
       function fetchLiveData() {
+        console.log("Fetching live data");
         fetch('/api/live-count')
           .then(response => response.json())
           .then(data => {
             var currentTime = new Date();
+            var currentTimeStr = currentTime.getHours().toString().padStart(2, '0') + ':' +
+              currentTime.getMinutes().toString().padStart(2, '0') + ':' +
+              currentTime.getSeconds().toString().padStart(2, '0');
+
+            if (xAxisData.length >= maxDataPoints) {
+              xAxisData.shift();
+            }
+            xAxisData.push(currentTimeStr);
+
+            option.xAxis.data = xAxisData;
 
             Object.keys(data).forEach(function (scenarioId) {
               initializeSeries(scenarioId);
-              var counts = data[scenarioId];
+              var successLogCount = data[scenarioId];
+
+              if (seriesData[scenarioId].success.length >= maxDataPoints) {
+                seriesData[scenarioId].success.shift();
+              }
 
               seriesData[scenarioId].success.push({
-                name: currentTime.toString(),
-                value: [currentTime, counts[0]]
+                name: currentTimeStr,
+                value: [currentTimeStr, successLogCount]
               });
-              seriesData[scenarioId].failure.push({
-                name: currentTime.toString(),
-                value: [currentTime, counts[1]]
-              });
-
-              // 최대 데이터 포인트 수를 초과하면 오래된 데이터 제거
-              if (seriesData[scenarioId].success.length > maxDataPoints) {
-                seriesData[scenarioId].success.shift();
-                seriesData[scenarioId].failure.shift();
-              }
             });
 
             myChart.setOption(option);
@@ -194,7 +206,7 @@
       }
 
       myChart.setOption(option);
-      setInterval(fetchLiveData, 2000); // 1초마다 갱신
+      setInterval(fetchLiveData, interval); // 5초마다 갱신
       fetchLiveData();
     });
   </script>
@@ -358,26 +370,17 @@
           <!-- right col (We are only adding the ID to make the widgets sortable)-->
           <section class="col-lg-5 connectedSortable">
             <!-- solid sales graph -->
-            <div class="card bg-gradient-info">
-              <div class="card-header border-0">
+            <div class="card">
+              <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-th mr-1"></i>
-                  실시간 시나리오 성공, 실패 그래프
+                  실시간 시나리오 성공 그래프
                 </h3>
-
-                <div class="card-tools">
-                  <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
               </div>
               <div class="card-body">
 
                 <!--여기에 새로운 실시간 그래프를 삽입할 것이다.-->
-                <div id="main" style="width: 100%; height: 400px;"></div>
+                <div id="main" style="width: 110%; height: 400px;"></div>
 
               </div>
               <!-- /.card-body -->

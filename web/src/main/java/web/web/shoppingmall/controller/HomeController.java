@@ -67,7 +67,7 @@ public class HomeController {
 
     @GetMapping("/api/live-count")
     @ResponseBody
-    public Map<Long, Long[]> getLiveCounts() {
+    public Map<Long, Long> getLiveCounts() {
         return visualizationService.liveCount();
     }
 }
