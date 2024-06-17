@@ -133,6 +133,7 @@
       };
 
       var seriesData = {};
+      var maxDataPoints = 10; // 최대 데이터 포인트 수 설정
 
       function initializeSeries(scenarioId) {
         if (!seriesData[scenarioId]) {
@@ -181,7 +182,8 @@
                 value: [currentTime, counts[1]]
               });
 
-              if (seriesData[scenarioId].success.length > 20) {
+              // 최대 데이터 포인트 수를 초과하면 오래된 데이터 제거
+              if (seriesData[scenarioId].success.length > maxDataPoints) {
                 seriesData[scenarioId].success.shift();
                 seriesData[scenarioId].failure.shift();
               }
@@ -192,7 +194,7 @@
       }
 
       myChart.setOption(option);
-      setInterval(fetchLiveData, 2000);
+      setInterval(fetchLiveData, 2000); // 1초마다 갱신
       fetchLiveData();
     });
   </script>
