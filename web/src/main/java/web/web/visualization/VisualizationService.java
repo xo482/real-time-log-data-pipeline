@@ -28,6 +28,7 @@ public class VisualizationService {
         Long[] list = new Long[2];
         list[0] = successLogRepository.count();
         list[1] = failureLogRepository.count();
+
         return list;
     }
 

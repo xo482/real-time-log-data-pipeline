@@ -9,17 +9,18 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class KafkaConsumerService {
 
     private static final String TOPIC_NAME = "start_topic";
-    private static final String[] NEXT_TOPIC_List = new String[]{"scenario_topic_1", "scenario_topic_2", "scenario_topic_3"};
     private static final String PAGEVIEW_TOPIC = "pageView_topic";
 
     private final KafkaTemplate<String, String> kafkaTemplate;
-
     private final ScenarioRepository scenarioRepository;
+
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -28,7 +29,6 @@ public class KafkaConsumerService {
     public void listen(String message) {
         // 메시지 출력
         System.out.println("Hub Received message: " + message);
-
 
         try {
             // JSON 객체로 파싱
@@ -61,10 +61,9 @@ public class KafkaConsumerService {
                         // time 값을 paramsJson에 추가
                         ((ObjectNode) paramsJson).put("date", date);
 
-
-                        // 다음 토픽으로 전송
-                        for (String nextTopic : NEXT_TOPIC_List) {
-                            kafkaTemplate.send(nextTopic, paramsJson.toString());
+                        List<Long> ids = scenarioRepository.findAllIds();
+                        for (Long id : ids) {
+                            kafkaTemplate.send("scenario_topic_" + id, paramsJson.toString());
                         }
                     } else {
                         System.out.println("The message does not contain 'params='.");

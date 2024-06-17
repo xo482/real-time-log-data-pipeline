@@ -16,35 +16,34 @@ import kafka.kafka.shoppingmall.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
-public class FilterService2 {
+public class FilterService {
 
-    private static final String TOPIC_NAME = "filter_topic_2";
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ScenarioRepository scenarioRepository;
     private final MemberRepository memberRepository;
     private final SuccessLogRepository successLogRepository;
     private final FailureLogRepository failureLogRepository;
-
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private Member member;
     private JsonNode jsonNode;
 
-
-    @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
+    @KafkaListener(topicPattern = "filter_topic_.*", groupId = "my_group")
     @Transactional
-    public void listen(String message) {
-        System.out.println("scenario_filter_2: " + message);
-
-        Long scenario_id = 2L;
-        Scenario scenario = scenarioRepository.findById(scenario_id).orElse(null);
+    public void listen(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        Long scenarioId = extractScenarioIdFromTopic(topic);
+        Scenario scenario = scenarioRepository.findById(scenarioId).orElse(null);
 
         // 필터링 정보 가져오기
         List<Filter> filters = scenario.getFilters();
@@ -55,6 +54,7 @@ public class FilterService2 {
 
         try {
             // 받은 메시지를 JSON으로 파싱
+
             jsonNode = objectMapper.readTree(message);
 
             // 고객 가져오기
@@ -91,11 +91,11 @@ public class FilterService2 {
 
             //== 저장 ==//
             if (flag) {
-                System.out.println("scenario_2 : 적합하므로 성공 테이블에 저장");
-                successLogRepository.save(new SuccessLog(scenario_id, jsonNode.toString()));
+                System.out.println("scenario_filter_"+scenarioId+" : 적합하므로 성공 테이블에 저장");
+                successLogRepository.save(new SuccessLog(scenarioId, jsonNode.toString()));
             } else {
-                System.out.println("scenario_2 : 적합하지 않으므로 실패 테이블에 저장");
-                failureLogRepository.save(new FailureLog(scenario_id, jsonNode.toString()));
+                System.out.println("scenario_filter_"+scenarioId+" : 적합하지 않으므로 실패 테이블에 저장");
+                failureLogRepository.save(new FailureLog(scenarioId, jsonNode.toString()));
             }
 
         } catch (Exception e) {
@@ -191,4 +191,12 @@ public class FilterService2 {
         }
     }
 
+    private Long extractScenarioIdFromTopic(String topic) {
+        Pattern pattern = Pattern.compile("filter_topic_(\\d+)");
+        Matcher matcher = pattern.matcher(topic);
+        if (matcher.matches()) {
+            return Long.parseLong(matcher.group(1));
+        }
+        return null;
+    }
 }

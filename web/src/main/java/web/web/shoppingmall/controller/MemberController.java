@@ -73,7 +73,6 @@ public class MemberController {
         Member member = memberRepository.findByEmail(email);
         if (member != null && member.getPassword().equals(password)) {
             ModelAndView modelAndView = new ModelAndView("redirect:/"); // 로그인 성공 시 이동할 페이지
-            modelAndView.addObject("message", "로그인 성공");
 
             // 로그인 성공했다면 사용자 아이디 쿠키에 삽입
             ResponseCookie memberIdCookie = ResponseCookie.from("memberId", String.valueOf(member.getId()))

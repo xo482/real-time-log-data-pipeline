@@ -1,5 +1,7 @@
 package kafka.kafka.format;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import kafka.kafka.admin.domain.LogFormat;
 import kafka.kafka.admin.domain.Scenario;
@@ -7,39 +9,42 @@ import kafka.kafka.admin.repository.ScenarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
-public class FormatService1 {
+public class FormatService {
 
-    private static final String TOPIC_NAME = "format_topic_1";
-    private static final String NEXT_TOPIC = "filter_topic_1";
+    private static final String NEXT_TOPIC_PREFIX = "filter_topic_";
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ScenarioRepository scenarioRepository;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
-    public void listen(String message) {
-        System.out.println("scenario_format_1: " + message);
-
-        Long scenario_id = 1L;
-        Scenario scenario = scenarioRepository.findById(scenario_id).orElse(null);
-        // LogFormatRepository에서 id가 1인 데이터를 가져옴
-        LogFormat logFormat = scenario.getLogFormat();
-        if (logFormat == null) {
-            System.err.println("LogFormat not found");
+    @KafkaListener(topicPattern = "format_topic_.*", groupId = "my_group")
+    public void listen(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        Long scenarioId = extractScenarioIdFromTopic(topic);
+        Scenario scenario = scenarioRepository.findById(scenarioId).orElse(null);
+        if (scenario == null) {
+            System.err.println("| scenario_" + scenarioId + " | Scenario not found |");
             return;
         }
-        try {
-            // 받은 메시지를 JSON으로 파싱
-            JsonNode jsonNode = objectMapper.readTree(message);
 
-            // 새로운 JSON 객체 생성
+        LogFormat logFormat = scenario.getLogFormat();
+        if (logFormat == null) {
+            System.err.println("LogFormat not found for scenario: " + scenarioId);
+            return;
+        }
+
+
+
+        try {
+            JsonNode jsonNode = objectMapper.readTree(message);
             ObjectNode newJson = objectMapper.createObjectNode();
 
             // logFormat의 각 필드를 확인하여 1인 필드만 추가
@@ -94,14 +99,22 @@ public class FormatService1 {
             if (logFormat.getHTTP_CONNECTION() == 1) newJson.set("HTTP_CONNECTION", jsonNode.get("HTTP_CONNECTION"));
             if (logFormat.getDate() == 1) newJson.set("date", jsonNode.get("date"));
 
-
-            // 새로운 JSON 객체를 문자열로 변환하여 다음 토픽으로 전송
             String newMessage = objectMapper.writeValueAsString(newJson);
-            kafkaTemplate.send(NEXT_TOPIC, newMessage);
+            System.out.println("scenario_format_" + scenarioId + ": " + newMessage);
+            kafkaTemplate.send(NEXT_TOPIC_PREFIX + scenarioId, newMessage);
 
         } catch (Exception e) {
             System.err.println("Failed to parse message: " + e.getMessage());
         }
+    }
+
+    private Long extractScenarioIdFromTopic(String topic) {
+        Pattern pattern = Pattern.compile("format_topic_(\\d+)");
+        Matcher matcher = pattern.matcher(topic);
+        if (matcher.matches()) {
+            return Long.parseLong(matcher.group(1));
+        }
+        return null;
     }
 }
 
