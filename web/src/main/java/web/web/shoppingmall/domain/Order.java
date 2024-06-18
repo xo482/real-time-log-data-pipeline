@@ -19,8 +19,7 @@ public class Order {
     @Column(name = "order_id")
     private Long id;
 
-    @Embedded
-    private Address address;
+    private String address;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status; // 주문 상태 [ORDER, CANCEL]
