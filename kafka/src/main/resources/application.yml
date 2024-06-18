@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mariadb://localhost:3306/sku
+    url: jdbc:mariadb://172.25.76:3306/sku
     username: root
     password: password123!
     driver-class-name: org.mariadb.jdbc.Driver
