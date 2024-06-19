@@ -126,15 +126,15 @@
               <td><a th:text="${scenario.manager}">김성현</a></td>
               <td class="project-state"><span th:text="${scenario.status}">완료</span></td>
               <td class="project-actions text-right">
-                <form th:action="@{'/scenarios/' + ${scenario.id} + '/status'}" method="post" style="display: inline;">
+                <form th:action="@{'/managerCenter/scenarios/' + ${scenario.id} + '/status'}" method="post" style="display: inline;">
                   <input type="hidden" name="status" value="RUN" />
                   <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-play"></i> 실행</button>
                 </form>
-                <form th:action="@{'/scenarios/' + ${scenario.id} + '/status'}" method="post" style="display: inline;">
+                <form th:action="@{'/managerCenter/scenarios/' + ${scenario.id} + '/status'}" method="post" style="display: inline;">
                   <input type="hidden" name="status" value="PAUSE" />
                   <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-pause"></i> 중지</button>
                 </form>
-                <form th:action="@{'/scenarios/' + ${scenario.id} + '/delete'}" method="get" style="display: inline;">
+                <form th:action="@{'/managerCenter/scenarios/' + ${scenario.id} + '/delete'}" method="get" style="display: inline;">
                   <button type="submit" class="btn btn-sm btn-sm"><i class="fas fa-trash"></i> </button>
                 </form>
               </td>
@@ -152,7 +152,7 @@
     <!-- 시나리오 추가 -->
     <div class="row justify-content-center">
       <div class="col-3 text-center">
-        <a href="/settings" class="btn btn-primary">
+        <a href="/managerCenter/settings" class="btn btn-primary">
           <h7 style="font-weight: bold;">+</h7>
         </a>
       </div>

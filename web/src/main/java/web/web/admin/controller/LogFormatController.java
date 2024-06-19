@@ -18,7 +18,14 @@ public class LogFormatController {
 
     private final LogFormatRepository logFormatRepository;
 
-    @PostMapping("/saveKeys")
+    @GetMapping("/logFormatPage")
+    public String showLogFormatPage(Model model) {
+        List<LogFormat> logFormats = logFormatRepository.findAll();
+        model.addAttribute("logFormats", logFormats);
+        return "AdminLTE-3.2.0-rc/src/_my/logFormatPage";
+    }
+
+    @PostMapping("/logFormatPage/saveKeys")
     @Transactional
     public String saveKeys(@RequestParam(value = "keys", required = false) List<String> keys) {
         LogFormat logFormat = new LogFormat();
@@ -87,12 +94,5 @@ public class LogFormatController {
         return "redirect:/logFormatPage";
     }
 
-
-    @GetMapping("/logFormatPage")
-    public String showLogFormatPage(Model model) {
-        List<LogFormat> logFormats = logFormatRepository.findAll();
-        model.addAttribute("logFormats", logFormats);
-        return "AdminLTE-3.2.0-rc/src/_my/logFormatPage";
-    }
 
 }
