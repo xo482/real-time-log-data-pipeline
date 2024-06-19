@@ -155,19 +155,19 @@
           <div class="card-body">
             <form th:action="@{/managerCenter/createScenario}" th:object="${scenario}" method="post">
               <div class="form-group">
-                <label>시나리오 제목:</label>
+                <label>시나리오 제목</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend"></div>
                   <input type="text" th:field="*{title}" class="form-control float-right">
                 </div>
 
-                <label>담당자:</label>
+                <label>담당자</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend"></div>
                   <input type="text" th:field="*{manager}" class="form-control float-right">
                 </div>
 
-                <label>로그 포맷 선택:</label>
+                <label>로그 포맷 선택</label>
                 <div class="input-group mb-3">
                   <select th:field="*{logFormat}" class="form-control">
                     <option value="" disabled selected>포맷을 선택하세요</option>
@@ -175,7 +175,7 @@
                   </select>
                 </div>
 
-                <label>논리 연산자 선택:</label>
+                <label>논리 연산자 선택</label>
                 <div class="input-group mb-3">
                   <select th:field="*{logicalOperator}" class="form-control">
                     <option value="" disabled selected>연산자를 선택하세요</option>
@@ -184,12 +184,12 @@
                   </select>
                 </div>
 
-                <label>필터링:</label>
+                <label>필터링</label>
                 <div id="comboRows" class="form-group">
                   <!-- 필터 행은 자바스크립트로 추가됨 -->
                 </div>
-                <button type="button" class="btn btn-primary" onclick="addComboRow()">추가</button>
-                <button type="submit" class="btn btn-primary">제출</button>
+                <button type="button" class="btn btn-primary" onclick="addComboRow()">필터 추가</button>
+                <button type="submit" class="btn btn-primary">시나리오 저장</button>
               </div>
             </form>
           </div>

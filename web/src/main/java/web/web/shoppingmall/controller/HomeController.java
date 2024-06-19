@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import web.web.visualization.VisualizationService;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -22,11 +23,6 @@ public class HomeController {
 
     @GetMapping("/adminPage")
     public String adminPage(Model model){
-
-        // 성공, 실패 그래프 데이터 전달
-        Long[] countList = visualizationService.logCount();
-        model.addAttribute("success", countList[0]);
-        model.addAttribute("failure", countList[1]);
 
         // 회원 수 전달
         Long memberCount = visualizationService.memberCount();
@@ -69,5 +65,15 @@ public class HomeController {
     @ResponseBody
     public Map<Long, Long> getLiveCounts() {
         return visualizationService.liveCount();
+    }
+
+    @GetMapping("/api/logCount")
+    @ResponseBody
+    public Map<String, Long> getLogCount() {
+        Long[] countList = visualizationService.logCount();
+        Map<String, Long> result = new HashMap<>();
+        result.put("success", countList[0]);
+        result.put("failure", countList[1]);
+        return result;
     }
 }
