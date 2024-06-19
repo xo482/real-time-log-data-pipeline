@@ -62,8 +62,10 @@ public class KafkaConsumerService {
                         ((ObjectNode) paramsJson).put("date", date);
 
                         List<Long> ids = scenarioRepository.findAllIds();
+                        System.out.println("ids.stream().count() = " + ids.stream().count());
                         for (Long id : ids) {
                             kafkaTemplate.send("scenario_topic_" + id, paramsJson.toString());
+                            Thread.sleep(200);
                         }
                     } else {
                         System.out.println("The message does not contain 'params='.");

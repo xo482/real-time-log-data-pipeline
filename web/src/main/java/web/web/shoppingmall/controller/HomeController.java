@@ -17,7 +17,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(){
-        return "/AdminLTE-3.2.0-rc/src/_my/shoppingmall";
+        return "AdminLTE-3.2.0-rc/src/_my/shoppingmall";
     }
 
     @GetMapping("/adminPage")
@@ -39,18 +39,18 @@ public class HomeController {
         Long visitorCount = visualizationService.pageView();
         model.addAttribute("visitorCount", visitorCount);
 
-        return "/AdminLTE-3.2.0-rc/src/_my/index";
+        return "AdminLTE-3.2.0-rc/src/_my/index";
     }
 
 
     @GetMapping("/product_detail/p_name_Adidas Spezial Handball Collegiate Navy")
     public String detailPage(){
-        return "/AdminLTE-3.2.0-rc/src/_my/product_detail/p_name_Adidas Spezial Handball Collegiate Navy";
+        return "AdminLTE-3.2.0-rc/src/_my/product_detail/p_name_Adidas Spezial Handball Collegiate Navy";
     }
 
     @GetMapping("/list")
     public String list(){
-        return "/AdminLTE-3.2.0-rc/src/_my/shopping_list";
+        return "AdminLTE-3.2.0-rc/src/_my/shopping_list";
     }
 
 

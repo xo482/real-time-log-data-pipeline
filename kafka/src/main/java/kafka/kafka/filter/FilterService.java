@@ -42,6 +42,7 @@ public class FilterService {
     @KafkaListener(topicPattern = "filter_topic_.*", groupId = "my_group")
     @Transactional
     public void listen(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+
         Long scenarioId = extractScenarioIdFromTopic(topic);
         Scenario scenario = scenarioRepository.findById(scenarioId).orElse(null);
 

@@ -22,6 +22,7 @@ public class Member {
     private String email;
     private String password;
     private String age;
+    private String address;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;

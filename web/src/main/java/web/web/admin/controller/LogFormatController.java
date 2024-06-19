@@ -92,7 +92,7 @@ public class LogFormatController {
     public String showLogFormatPage(Model model) {
         List<LogFormat> logFormats = logFormatRepository.findAll();
         model.addAttribute("logFormats", logFormats);
-        return "/AdminLTE-3.2.0-rc/src/_my/logFormatPage";
+        return "AdminLTE-3.2.0-rc/src/_my/logFormatPage";
     }
 
 }
