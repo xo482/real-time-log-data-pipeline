@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -171,10 +171,6 @@
         <div>* 도로명</div>
         <input type="text" id="address" required />
       </div>
-      <div class="user-info-zipcode">
-        <div>* 우편번호</div>
-        <input type="text" id="zipcode" required />
-      </div>
 
     </div>
     <div class="gender">
@@ -204,11 +200,10 @@
     const username = document.getElementById('username').value;
     const age = document.getElementById('age').value;
     const address = document.getElementById('address').value;
-    const zipcode = document.getElementById('zipcode').value;
     const gender = document.querySelector('input[name="gender"]:checked')?.value;
     const agree = document.getElementById('agree').checked;
 
-    if (!email || !password || !passwordCheck || !username || !age || !address || !zipcode || !gender || !agree) {
+    if (!email || !password || !passwordCheck || !username || !age || !address || !gender || !agree) {
       alert('모든 필드를 채워주세요.');
       return;
     }
@@ -233,7 +228,6 @@
       username: username,
       age: age,
       address: address,
-      zipcode: zipcode,
       gender: gender
     };
 

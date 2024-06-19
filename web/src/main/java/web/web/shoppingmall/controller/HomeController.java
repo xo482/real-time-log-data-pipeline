@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import web.web.visualization.VisualizationService;
+
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -14,7 +17,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(){
-        return "/AdminLTE-3.2.0-rc/src/_my/shoppingmall";
+        return "AdminLTE-3.2.0-rc/src/_my/shoppingmall";
     }
 
     @GetMapping("/adminPage")
@@ -36,18 +39,18 @@ public class HomeController {
         Long visitorCount = visualizationService.pageView();
         model.addAttribute("visitorCount", visitorCount);
 
-        return "/AdminLTE-3.2.0-rc/src/_my/index";
+        return "AdminLTE-3.2.0-rc/src/_my/index";
     }
 
 
     @GetMapping("/product_detail/p_name_Adidas Spezial Handball Collegiate Navy")
     public String detailPage(){
-        return "/AdminLTE-3.2.0-rc/src/_my/product_detail/p_name_Adidas Spezial Handball Collegiate Navy";
+        return "AdminLTE-3.2.0-rc/src/_my/product_detail/p_name_Adidas Spezial Handball Collegiate Navy";
     }
 
     @GetMapping("/list")
     public String list(){
-        return "/AdminLTE-3.2.0-rc/src/_my/shopping_list";
+        return "AdminLTE-3.2.0-rc/src/_my/shopping_list";
     }
 
 
@@ -60,5 +63,11 @@ public class HomeController {
     @GetMapping("/myLogin")
     public String myLogin() {
         return "AdminLTE-3.2.0-rc/index";
+    }
+
+    @GetMapping("/api/live-count")
+    @ResponseBody
+    public Map<Long, Long> getLiveCounts() {
+        return visualizationService.liveCount();
     }
 }

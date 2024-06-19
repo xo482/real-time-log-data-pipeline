@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -91,6 +91,124 @@
     window.onload = function() {
       drawChart();
     };
+  </script>
+
+<!--  실시간 그래프-->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      console.log("DOMContentLoaded event triggered");
+
+      var chartDom = document.getElementById('main');
+      var myChart = echarts.init(chartDom);
+      var option = {
+        title: {
+          text: ''
+        },
+        tooltip: {
+          trigger: 'axis',
+          formatter: function (params) {
+            return params.map(function (item) {
+              return item.marker + item.seriesName + ': ' + item.value[1];
+            }).join('<br/>');
+          },
+          axisPointer: {
+            animation: false
+          }
+        },
+        legend: {
+          data: []
+        },
+        xAxis: {
+          type: 'category',
+          splitLine: {
+            show: false
+          },
+          data: [], // xAxis에 데이터를 추가할 수 있도록 배열을 설정
+          axisLabel: {
+            formatter: function (value) {
+              return value; // 이미 문자열로 변환된 시간 값을 그대로 사용
+            }
+          }
+        },
+        yAxis: {
+          type: 'value',
+          boundaryGap: [0, '100%'],
+          splitLine: {
+            show: false
+          }
+        },
+        series: []
+      };
+
+      var seriesData = {};
+      var maxDataPoints = 7; // 최대 데이터 포인트 수 설정
+      var interval = 5000; // 5초 간격
+      var xAxisData = []; // xAxis 데이터 배열
+
+      function initializeSeries(scenarioId) {
+        if (!seriesData[scenarioId]) {
+          seriesData[scenarioId] = {
+            success: []
+          };
+
+          for (var i = 0; i < maxDataPoints; i++) {
+            seriesData[scenarioId].success.push({
+              name: '',
+              value: ['', 0]
+            });
+          }
+
+          option.series.push({
+            name: 'Scenario ' + scenarioId + ' Success',
+            type: 'line',
+            showSymbol: false,
+            hoverAnimation: false,
+            data: seriesData[scenarioId].success
+          });
+
+          option.legend.data.push('Scenario ' + scenarioId + ' Success');
+        }
+      }
+
+      function fetchLiveData() {
+        console.log("Fetching live data");
+        fetch('/api/live-count')
+          .then(response => response.json())
+          .then(data => {
+            var currentTime = new Date();
+            var currentTimeStr = currentTime.getHours().toString().padStart(2, '0') + ':' +
+              currentTime.getMinutes().toString().padStart(2, '0') + ':' +
+              currentTime.getSeconds().toString().padStart(2, '0');
+
+            if (xAxisData.length >= maxDataPoints) {
+              xAxisData.shift();
+            }
+            xAxisData.push(currentTimeStr);
+
+            option.xAxis.data = xAxisData;
+
+            Object.keys(data).forEach(function (scenarioId) {
+              initializeSeries(scenarioId);
+              var successLogCount = data[scenarioId];
+
+              if (seriesData[scenarioId].success.length >= maxDataPoints) {
+                seriesData[scenarioId].success.shift();
+              }
+
+              seriesData[scenarioId].success.push({
+                name: currentTimeStr,
+                value: [currentTimeStr, successLogCount]
+              });
+            });
+
+            myChart.setOption(option);
+          });
+      }
+
+      myChart.setOption(option);
+      setInterval(fetchLiveData, interval); // 5초마다 갱신
+      fetchLiveData();
+    });
   </script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -252,24 +370,18 @@
           <!-- right col (We are only adding the ID to make the widgets sortable)-->
           <section class="col-lg-5 connectedSortable">
             <!-- solid sales graph -->
-            <div class="card bg-gradient-info">
-              <div class="card-header border-0">
+            <div class="card">
+              <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-th mr-1"></i>
-                  Sales Graph
+                  실시간 시나리오 성공 그래프
                 </h3>
-
-                <div class="card-tools">
-                  <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
               </div>
               <div class="card-body">
-                <canvas class="chart" id="line-chart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+
+                <!--여기에 새로운 실시간 그래프를 삽입할 것이다.-->
+                <div id="main" style="width: 110%; height: 400px;"></div>
+
               </div>
               <!-- /.card-body -->
               <div hidden="true" class="card-footer bg-transparent">
@@ -351,7 +463,7 @@
 <!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.js"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="../../dist/js/demo.js"></script>
+<!--<script src="../../dist/js/demo.js"></script>-->
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="../../dist/js/pages/dashboard.js"></script>
 </body>

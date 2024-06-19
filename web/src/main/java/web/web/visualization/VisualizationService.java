@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import web.web.admin.domain.NumberOfVisitors;
 import web.web.admin.repository.FailureLogRepository;
 import web.web.admin.repository.NumberOfVisitorRepository;
+import web.web.admin.repository.ScenarioRepository;
 import web.web.admin.repository.SuccessLogRepository;
 import web.web.shoppingmall.domain.Order;
 import web.web.shoppingmall.repository.MemberRepository;
@@ -13,6 +14,9 @@ import web.web.shoppingmall.repository.OrderRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)
@@ -23,6 +27,7 @@ public class VisualizationService {
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
     private final NumberOfVisitorRepository numberOfVisitorRepository;
+    private final ScenarioRepository scenarioRepository;
 
     public Long[] logCount() {
         Long[] list = new Long[2];
@@ -30,6 +35,16 @@ public class VisualizationService {
         list[1] = failureLogRepository.count();
 
         return list;
+    }
+
+    public Map<Long, Long> liveCount() {
+        Map<Long, Long> map = new HashMap<>();
+        List<Long> scenarioIds = scenarioRepository.findAllIds();
+        for (Long scenarioId : scenarioIds) {
+            Long successLogCount = successLogRepository.countByScenarioId(scenarioId);
+            map.put(scenarioId, successLogCount);
+        }
+        return map;
     }
 
     public Long memberCount() {
