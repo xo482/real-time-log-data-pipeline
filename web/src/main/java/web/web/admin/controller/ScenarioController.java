@@ -12,6 +12,8 @@ import web.web.admin.domain.Status;
 import web.web.admin.repository.LogFormatRepository;
 import web.web.admin.repository.ScenarioRepository;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,5 +69,31 @@ public class ScenarioController {
         Scenario scenario = scenarioRepository.findById(id).orElseThrow(() -> new ExpressionException("Scenario not found"));
         scenarioRepository.delete(scenario);
         return "redirect:/managerCenter";
+    }
+
+    @GetMapping("/managerCenter/api/logFormat/{id}/filters")
+    @ResponseBody
+    public List<String> getLogFormatFilters(@PathVariable Long id) {
+        LogFormat logFormat = logFormatRepository.findById(id).orElseThrow(() -> new RuntimeException("LogFormat not found"));
+        List<String> filters = new ArrayList<>();
+
+        Field[] fields = LogFormat.class.getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                field.setAccessible(true);
+                Object value = field.get(logFormat);
+                if (value instanceof Integer && (Integer) value == 1) {
+                    if ("memberId".equals(field.getName())) {
+                        filters.add("age");
+                        filters.add("gender");
+                    } else {
+                        filters.add(field.getName());
+                    }
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return filters.stream().distinct().collect(Collectors.toList());
     }
 }
