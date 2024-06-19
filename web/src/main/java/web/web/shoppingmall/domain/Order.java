@@ -28,7 +28,7 @@ public class Order {
     @DateTimeFormat(pattern = "yyyy-MM-dd/HH:mm:ss")
     private LocalDateTime orderDate;
     int orderPrice; // total price
-    int count; // total stockQuantity
+    int count;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")

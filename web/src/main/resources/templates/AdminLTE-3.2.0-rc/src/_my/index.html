@@ -29,13 +29,11 @@
   <!-- jQuery -->
   <script src="../../plugins/jquery/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+
   <script th:inline="javascript">
     var myChart;
 
-    function drawChart() {
-      var success = /*[[${success}]]*/ 0; // Thymeleaf 템플릿 문법을 사용하여 성공 횟수 가져오기
-      var failure = /*[[${failure}]]*/ 0; // Thymeleaf 템플릿 문법을 사용하여 실패 횟수 가져오기
-
+    function drawChart(success, failure) {
       // 차트 데이터 설정
       var chartData = [
         { value: success, name: 'Success' },
@@ -43,7 +41,9 @@
       ];
 
       // ECharts 인스턴스 초기화
-      myChart = echarts.init(document.getElementById('chartContainer'));
+      if (!myChart) {
+        myChart = echarts.init(document.getElementById('chartContainer'));
+      }
 
       // 차트 옵션 설정
       var option = {
@@ -87,13 +87,25 @@
       myChart.setOption(option);
     }
 
-    // 페이지 로드 시 차트 그리기
+    function fetchDataAndDrawChart() {
+      fetch('/api/logCount')
+        .then(response => response.json())
+        .then(data => {
+          drawChart(data.success, data.failure);
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+    }
+
+    // 페이지 로드 시 차트 그리기 및 2초마다 업데이트
     window.onload = function() {
-      drawChart();
+      fetchDataAndDrawChart();
+      setInterval(fetchDataAndDrawChart, 2000);
     };
   </script>
 
-<!--  실시간 그래프-->
+  <!--실시간 그래프-->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       console.log("DOMContentLoaded event triggered");
@@ -142,7 +154,7 @@
 
       var seriesData = {};
       var maxDataPoints = 7; // 최대 데이터 포인트 수 설정
-      var interval = 5000; // 5초 간격
+      var interval = 2000; // 5초 간격
       var xAxisData = []; // xAxis 데이터 배열
 
       function initializeSeries(scenarioId) {

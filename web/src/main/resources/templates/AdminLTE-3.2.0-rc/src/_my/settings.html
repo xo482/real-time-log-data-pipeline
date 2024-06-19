@@ -5,28 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SW | Settings</title>
 
-  <!-- Google Font: Source Sans Pro -->
+  <!-- CSS 및 JS 라이브러리 로드 -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
-  <!-- daterange picker -->
   <link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker.css">
-  <!-- iCheck for checkboxes and radio inputs -->
   <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-  <!-- Bootstrap Color Picker -->
   <link rel="stylesheet" href="../../plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
-  <!-- Tempusdominus Bootstrap 4 -->
   <link rel="stylesheet" href="../../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-  <!-- Select2 -->
   <link rel="stylesheet" href="../../plugins/select2/css/select2.min.css">
   <link rel="stylesheet" href="../../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-  <!-- Bootstrap4 Duallistbox -->
   <link rel="stylesheet" href="../../plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
-  <!-- BS Stepper -->
   <link rel="stylesheet" href="../../plugins/bs-stepper/css/bs-stepper.min.css">
-  <!-- dropzonejs -->
   <link rel="stylesheet" href="../../plugins/dropzone/min/dropzone.min.css">
-  <!-- Theme style -->
   <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
 
   <!-- jQuery -->
@@ -35,18 +25,14 @@
   <script>
     let filterIndex = 0;
 
-    function addComboRow() {
+    function addComboRow(filters) {
       filterIndex++;
+      const filterOptions = filters.map(filter => `<option value="${filter}">${filter}</option>`).join('');
       const template = `
         <div class="form-group row combo-row">
           <div class="col">
             <select class="form-control" name="filters[${filterIndex}].left">
-              <option value="age">나이</option>
-              <option value="gender">성별</option>
-              <option value="HTTP_USER_AGENT">접속 브라우저</option>
-              <option value="memberId">ID</option>
-              <option value="h">시</option>
-              <option value="m">분</option>
+              ${filterOptions}
             </select>
           </div>
           <div class="col">
@@ -78,8 +64,24 @@
       row.parentNode.removeChild(row);
     }
 
+    function fetchFilters(logFormatId) {
+      fetch(`/managerCenter/api/logFormat/${logFormatId}/filters`)
+        .then(response => response.json())
+        .then(filters => {
+          document.querySelector("#comboRows").innerHTML = ''; // 기존 필터 삭제
+          addComboRow(filters); // 새 필터 추가
+        })
+        .catch(error => console.error('Error fetching filters:', error));
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
-      addComboRow(); // 페이지가 로드될 때 첫 번째 필터 행 추가
+      const logFormatSelect = document.querySelector('select[name="logFormat"]');
+      logFormatSelect.addEventListener('change', function() {
+        const logFormatId = this.value;
+        if (logFormatId) {
+          fetchFilters(logFormatId);
+        }
+      });
     });
   </script>
 </head>
@@ -109,7 +111,6 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
           <li class="nav-item">
             <a href="/adminPage" class="nav-link">
               <i class="far fa-circle nav-icon"></i>
@@ -130,15 +131,11 @@
           </li>
         </ul>
       </nav>
-      <!-- /.sidebar-menu -->
     </div>
-    <!-- /.sidebar -->
   </aside>
 
-  <!-- Content Wrapper. Contains page content -->
+  <!-- Content Wrapper -->
   <div class="content-wrapper">
-
-    <!-- 기초설정 시작 -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -146,28 +143,25 @@
             <h1>기초 설정</h1>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
-    <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
         <div class="card card-primary">
           <div class="card-body">
-            <form th:action="@{/createScenario}" th:object="${scenario}" method="post">
+            <form th:action="@{/managerCenter/createScenario}" th:object="${scenario}" method="post">
               <div class="form-group">
-                <label>시나리오 제목:</label>
+                <label>시나리오 제목</label>
                 <div class="input-group mb-3">
-                  <div class="input-group-prepend"></div>
                   <input type="text" th:field="*{title}" class="form-control float-right">
                 </div>
 
-                <label>담당자:</label>
+                <label>담당자</label>
                 <div class="input-group mb-3">
-                  <div class="input-group-prepend"></div>
                   <input type="text" th:field="*{manager}" class="form-control float-right">
                 </div>
 
-                <label>로그 포맷 선택:</label>
+                <label>로그 포맷 선택</label>
                 <div class="input-group mb-3">
                   <select th:field="*{logFormat}" class="form-control">
                     <option value="" disabled selected>포맷을 선택하세요</option>
@@ -175,7 +169,7 @@
                   </select>
                 </div>
 
-                <label>논리 연산자 선택:</label>
+                <label>논리 연산자 선택</label>
                 <div class="input-group mb-3">
                   <select th:field="*{logicalOperator}" class="form-control">
                     <option value="" disabled selected>연산자를 선택하세요</option>
@@ -184,49 +178,35 @@
                   </select>
                 </div>
 
-                <label>필터링:</label>
+                <label>필터링</label>
                 <div id="comboRows" class="form-group">
                   <!-- 필터 행은 자바스크립트로 추가됨 -->
                 </div>
-                <button type="button" class="btn btn-primary" onclick="addComboRow()">추가</button>
-                <button type="submit" class="btn btn-primary">제출</button>
+                <button type="button" class="btn btn-primary" onclick="addComboRow([])">필터 추가</button>
+                <button type="submit" class="btn btn-primary">시나리오 저장</button>
               </div>
             </form>
           </div>
         </div>
       </div>
     </section>
-    <!-- 기초설정 끝 -->
-
   </div>
 </div>
-<!-- ./wrapper -->
 
 <!-- Bootstrap 4 -->
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- Select2 -->
 <script src="../../plugins/select2/js/select2.full.min.js"></script>
-<!-- Bootstrap4 Duallistbox -->
+<!-- 기타 플러그인들 -->
 <script src="../../plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
-<!-- InputMask -->
 <script src="../../plugins/moment/moment.min.js"></script>
-<!-- inputmask -->
 <script src="../../plugins/inputmask/jquery.inputmask.min.js"></script>
-<!-- date-range-picker -->
 <script src="../../plugins/daterangepicker/daterangepicker.js"></script>
-<!-- bootstrap color picker -->
 <script src="../../plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
-<!-- Tempusdominus Bootstrap 4 -->
 <script src="../../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-<!-- bootstrap switch -->
 <script src="../../plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
-<!-- BS-Stepper -->
 <script src="../../plugins/bs-stepper/js/bs-stepper.min.js"></script>
-<!-- dropzonejs -->
 <script src="../../plugins/dropzone/min/dropzone.min.js"></script>
-<!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<!--<script src="../../dist/js/demo.js"></script>-->
 </body>
 </html>
