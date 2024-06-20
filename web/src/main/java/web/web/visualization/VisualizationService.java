@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.web.admin.domain.NumberOfVisitors;
+import web.web.admin.domain.Status;
 import web.web.admin.repository.FailureLogRepository;
 import web.web.admin.repository.NumberOfVisitorRepository;
 import web.web.admin.repository.ScenarioRepository;
@@ -58,8 +59,10 @@ public class VisualizationService {
         String endTime = now.format(formatter);
 
         for (Long scenarioId : scenarioIds) {
-            Long successLogCount = successLogRepository.countLogsInTimeRangeByScenarioId(scenarioId, startTime, endTime);
-            map.put(scenarioId, successLogCount);
+            if (scenarioRepository.findById(scenarioId).get().getStatus() == Status.RUN) {
+                Long successLogCount = successLogRepository.countLogsInTimeRangeByScenarioId(scenarioId, startTime, endTime);
+                map.put(scenarioId, successLogCount);
+            }
         }
 
         return map;
