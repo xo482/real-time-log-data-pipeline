@@ -14,6 +14,7 @@ import web.web.shoppingmall.repository.OrderRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +32,16 @@ public class VisualizationService {
 
     public Long[] logCount() {
         Long[] list = new Long[2];
-        list[0] = successLogRepository.count();
-        list[1] = failureLogRepository.count();
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime twoSecondsAgo = now.minusSeconds(12);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
+        String startTime = twoSecondsAgo.format(formatter);
+        String endTime = now.format(formatter);
+
+        list[0] = successLogRepository.countLogsInTimeRange(startTime, endTime);
+        list[1] = failureLogRepository.countLogsInTimeRange(startTime, endTime);
 
         return list;
     }
@@ -40,10 +49,19 @@ public class VisualizationService {
     public Map<Long, Long> liveCount() {
         Map<Long, Long> map = new HashMap<>();
         List<Long> scenarioIds = scenarioRepository.findAllIds();
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime twoSecondsAgo = now.minusSeconds(2);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
+        String startTime = twoSecondsAgo.format(formatter);
+        String endTime = now.format(formatter);
+
         for (Long scenarioId : scenarioIds) {
-            Long successLogCount = successLogRepository.countByScenarioId(scenarioId);
+            Long successLogCount = successLogRepository.countLogsInTimeRangeByScenarioId(scenarioId, startTime, endTime);
             map.put(scenarioId, successLogCount);
         }
+
         return map;
     }
 
