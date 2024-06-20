@@ -116,7 +116,7 @@ public class LogFormat {
         this.HTTP_X_FORWARDED_FOR = 0;
         this.HTTP_ACCEPT_ENCODING = 0;
         this.HTTP_CONNECTION = 0;
-        this.date = 0;
+        this.date = 1;
     }
 
 }
