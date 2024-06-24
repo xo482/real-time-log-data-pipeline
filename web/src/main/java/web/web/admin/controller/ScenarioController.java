@@ -83,6 +83,7 @@ public class ScenarioController {
                 field.setAccessible(true);
                 Object value = field.get(logFormat);
                 if (value instanceof Integer && (Integer) value == 1) {
+                    if ("date".equals(field.getName())) {continue;}
                     if ("memberId".equals(field.getName())) {
                         filters.add("age");
                         filters.add("gender");
