@@ -154,7 +154,7 @@
 
       var seriesData = {};
       var maxDataPoints = 7; // 최대 데이터 포인트 수 설정
-      var interval = 2000; // 5초 간격
+      var interval = 2000; // 2초 간격
       var xAxisData = []; // xAxis 데이터 배열
 
       function initializeSeries(scenarioId) {
@@ -218,7 +218,7 @@
       }
 
       myChart.setOption(option);
-      setInterval(fetchLiveData, interval); // 5초마다 갱신
+      setInterval(fetchLiveData, interval); // 2초마다 갱신
       fetchLiveData();
     });
   </script>

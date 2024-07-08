@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import web.web.shoppingmall.domain.Member;
 import web.web.shoppingmall.repository.MemberRepository;
-import web.web.shoppingmall.service.MemberService;
-
-import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -22,27 +19,7 @@ import java.util.Optional;
 public class MemberController {
 
 
-    private final MemberService memberService;
     private final MemberRepository memberRepository;
-
-    @PostMapping("/select-member")
-    public String selectMember(@RequestParam Long memberId, HttpServletResponse response) {
-        Optional<Member> member = memberService.findMemberById(memberId);
-        if (member.isPresent()) {
-            Member selectedMember = member.get();
-
-            ResponseCookie memberIdCookie = ResponseCookie.from("memberId", String.valueOf(selectedMember.getId()))
-                    .path("/")
-                    .httpOnly(false)
-                    .secure(false) // Secure 속성을 false로 설정
-                    .build();
-
-            response.addHeader("Set-Cookie", memberIdCookie.toString());
-            // 로그에 쿠키 정보 출력
-            log.info("Set-Cookie: " + memberIdCookie.toString());
-        }
-        return "redirect:/"; // 리다이렉트할 페이지로 변경 가능
-    }
 
     @GetMapping("/login")
     public String login() {
