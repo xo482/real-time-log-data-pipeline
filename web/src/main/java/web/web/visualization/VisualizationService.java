@@ -52,7 +52,7 @@ public class VisualizationService {
         List<Long> scenarioIds = scenarioRepository.findAllIds();
 
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime twoSecondsAgo = now.minusSeconds(2);
+        LocalDateTime twoSecondsAgo = now.minusSeconds(4);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
         String startTime = twoSecondsAgo.format(formatter);
