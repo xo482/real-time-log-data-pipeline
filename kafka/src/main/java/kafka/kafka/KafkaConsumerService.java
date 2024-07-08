@@ -64,15 +64,10 @@ public class KafkaConsumerService {
                         List<Long> ids = scenarioRepository.findAllIds();
                         for (Long id : ids) {
                             kafkaTemplate.send("scenario_topic_" + id, paramsJson.toString());
-                            Thread.sleep(200);
                         }
                     } else {
                         System.out.println("The message does not contain 'params='.");
                     }
-                }
-                if (pathValue.equals("pageView")) {
-                    // 다음 토픽으로 전송
-                    kafkaTemplate.send(PAGEVIEW_TOPIC, "visitor count");
                 }
 
             } else {
