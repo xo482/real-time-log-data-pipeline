@@ -33,9 +33,7 @@ services:
     restart: always
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./container_niWx9Jy3.js:/usr/share/nginx/html/js/container_niWx9Jy3.js
       - ./container_9KD9SNRT.js:/usr/share/nginx/html/js/container_9KD9SNRT.js
-      - ./container_VXDKU75K.js:/usr/share/nginx/html/js/container_VXDKU75K.js
       - ./matomo.js:/usr/share/nginx/html/matomo.js
     networks:
       fluentd_network:
@@ -53,7 +51,6 @@ services:
         ipv4_address: 172.28.0.5 # fluentd 서비스에 할당된 고정 IP
     ports:
       - "9880:9880"
-      - "9881:9881"
     volumes:
       - ./fluent.conf:/fluentd/etc/fluent.conf
 
