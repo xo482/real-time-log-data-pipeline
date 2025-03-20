@@ -28,7 +28,7 @@ public class InitDb {
         initService.dbInit2();
         initService.dbInit3();
         initService.InitScenario1();
-        initService.InitScenario2();
+//        initService.InitScenario2();
         initService.dbInit5();
         initService.dbInit6();
     }
