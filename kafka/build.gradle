@@ -22,6 +22,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
 	implementation 'org.springframework.kafka:spring-kafka:3.2.0'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 	implementation 'org.openjdk.nashorn:nashorn-core:15.4'
 

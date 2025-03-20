@@ -4,3 +4,11 @@ spring:
     username: root
     password: A!CWUgeouv5evo
     driver-class-name: org.mariadb.jdbc.Driver
+
+  kafka:
+    bootstrap-servers: ec2-13-125-115-96.ap-northeast-2.compute.amazonaws.com:9092
+
+spring.data:
+  redis:
+    host: localhost         # Redis 서버 호스트
+    port: 6379              # Redis 서버 포트
