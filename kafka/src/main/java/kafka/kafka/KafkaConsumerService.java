@@ -16,7 +16,6 @@ import java.util.List;
 public class KafkaConsumerService {
 
     private static final String TOPIC_NAME = "start_topic";
-    private static final String PAGEVIEW_TOPIC = "pageView_topic";
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ScenarioRepository scenarioRepository;
@@ -25,10 +24,10 @@ public class KafkaConsumerService {
     private ObjectMapper objectMapper = new ObjectMapper();
 
 
-    @KafkaListener(topics = TOPIC_NAME, groupId = "my_group")
+    @KafkaListener(topics = TOPIC_NAME, groupId = "my_group", concurrency = "5")
     public void listen(String message) {
         // 메시지 출력
-        System.out.println("Hub Received message: " + message);
+//        System.out.println("Hub Received message: " + message);
 
         try {
             // JSON 객체로 파싱
@@ -61,10 +60,12 @@ public class KafkaConsumerService {
                         // time 값을 paramsJson에 추가
                         ((ObjectNode) paramsJson).put("date", date);
 
-                        List<Long> ids = scenarioRepository.findAllIds();
-                        for (Long id : ids) {
-                            kafkaTemplate.send("scenario_topic_" + id, paramsJson.toString());
-                        }
+
+//                        List<Long> ids = scenarioRepository.findAllIds();
+//                        for (Long id : ids)  {
+//                            kafkaTemplate.send("scenario_topic_" + id, paramsJson.toString());
+//                        }
+                        kafkaTemplate.send("scenario_topic_1", paramsJson.toString());
                     } else {
                         System.out.println("The message does not contain 'params='.");
                     }

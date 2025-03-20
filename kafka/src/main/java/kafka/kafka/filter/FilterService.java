@@ -1,5 +1,7 @@
 package kafka.kafka.filter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kafka.kafka.admin.domain.Filter;
@@ -10,6 +12,7 @@ import kafka.kafka.admin.domain.log.SuccessLog;
 import kafka.kafka.admin.repository.FailureLogRepository;
 import kafka.kafka.admin.repository.ScenarioRepository;
 import kafka.kafka.admin.repository.SuccessLogRepository;
+import kafka.kafka.service.RedisService;
 import kafka.kafka.shoppingmall.domain.Gender;
 import kafka.kafka.shoppingmall.domain.Member;
 import kafka.kafka.shoppingmall.repository.MemberRepository;
@@ -36,21 +39,32 @@ public class FilterService {
     private final SuccessLogRepository successLogRepository;
     private final FailureLogRepository failureLogRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RedisService redisService;
     private Member member;
     private JsonNode jsonNode;
 
-    @KafkaListener(topicPattern = "filter_topic_.*", groupId = "my_group")
+    @KafkaListener(topicPattern = "filter_topic_.*", groupId = "filter_group", concurrency = "5")
     @Transactional
-    public void listen(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+    public void listen(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws JsonProcessingException {
 
         Long scenarioId = extractScenarioIdFromTopic(topic);
-        Scenario scenario = scenarioRepository.findById(scenarioId).orElse(null);
+        String key = "scenario:" + scenarioId + ":filer";
+        String opKey = "scenario:" + scenarioId + ":operator";
+        String filterString = redisService.getValue(key);
+        String operatorString = redisService.getValue(opKey);
 
-        // 필터링 정보 가져오기
-        List<Filter> filters = scenario.getFilters();
-        if (filters == null) {
-            System.err.println("filters not found");
-            return;
+        List<Filter> filters;
+        if (filterString != null) filters = objectMapper.readValue(filterString, new TypeReference<List<Filter>>() {});
+        else {
+            filters = scenarioRepository.findById(scenarioId).orElse(null).getFilters();
+            redisService.setValueWithTTL(key, objectMapper.writeValueAsString(filters), 600);
+        }
+
+        LogicalOperator logicalOperator;
+        if (operatorString != null) logicalOperator = objectMapper.readValue(operatorString, LogicalOperator.class);
+        else {
+            logicalOperator = scenarioRepository.findById(scenarioId).orElse(null).getLogicalOperator();
+            redisService.setValueWithTTL(opKey, objectMapper.writeValueAsString(logicalOperator), 600);
         }
 
         try {
@@ -67,9 +81,10 @@ public class FilterService {
                 member = memberRepository.findById(memberId).get();
             }
 
+
             // AND 연산
             boolean flag;
-            if (scenario.getLogicalOperator() == LogicalOperator.AND) {
+            if (logicalOperator == LogicalOperator.AND) {
                 flag = true;
                 for (Filter filter : filters) {
                     if (!compare(filter.getLeft(), filter.getOperator(), filter.getRight())) {
@@ -92,10 +107,10 @@ public class FilterService {
 
             //== 저장 ==//
             if (flag) {
-                System.out.println("scenario_filter_"+scenarioId+" : 적합하므로 성공 테이블에 저장");
+//                System.out.println("scenario_filter_"+scenarioId+" : 적합하므로 성공 테이블에 저장");
                 successLogRepository.save(new SuccessLog(scenarioId, jsonNode.toString()));
             } else {
-                System.out.println("scenario_filter_"+scenarioId+" : 적합하지 않으므로 실패 테이블에 저장");
+//                System.out.println("scenario_filter_"+scenarioId+" : 적합하지 않으므로 실패 테이블에 저장");
                 failureLogRepository.save(new FailureLog(scenarioId, jsonNode.toString()));
             }
 
@@ -201,3 +216,4 @@ public class FilterService {
         return null;
     }
 }
+
