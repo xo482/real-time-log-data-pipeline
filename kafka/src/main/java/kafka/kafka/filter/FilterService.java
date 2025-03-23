@@ -17,19 +17,27 @@ import kafka.kafka.shoppingmall.domain.Gender;
 import kafka.kafka.shoppingmall.domain.Member;
 import kafka.kafka.shoppingmall.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.internals.AbstractPartitionAssignor;
+import org.springframework.data.domain.Page;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StopWatch;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FilterService {
 
 
@@ -40,94 +48,142 @@ public class FilterService {
     private final FailureLogRepository failureLogRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final RedisService redisService;
-    private Member member;
-    private JsonNode jsonNode;
 
-    @KafkaListener(topicPattern = "filter_topic_.*", groupId = "filter_group", concurrency = "5")
+    private final ThreadLocal<List<SuccessLog>> successBuffer = ThreadLocal.withInitial(ArrayList::new);
+    private final ThreadLocal<List<FailureLog>> failureBuffer = ThreadLocal.withInitial(ArrayList::new);
+    private static final int BATCH_SIZE = 200;
+    private static final long FLUSH_INTERVAL_MS = 5000; // 5초마다 flush
+    private final ThreadLocal<Long> lastFlushTime = ThreadLocal.withInitial(System::currentTimeMillis);
+
+
+    @KafkaListener(topicPattern = "filter_topic_.*", groupId = "filter_group", concurrency = "3")
     @Transactional
     public void listen(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws JsonProcessingException {
 
+        // 1. JSON 파싱
+        JsonNode jsonNode = objectMapper.readTree(message);
+
+        // 2. Redis에서 필터 및 연산자 멤버 가져오기
         Long scenarioId = extractScenarioIdFromTopic(topic);
+
+        Long memberId = null;
+        if (jsonNode.has("memberId")) memberId = jsonNode.get("memberId").asLong();
+
         String key = "scenario:" + scenarioId + ":filer";
         String opKey = "scenario:" + scenarioId + ":operator";
-        String filterString = redisService.getValue(key);
-        String operatorString = redisService.getValue(opKey);
+        String memberKey = "member:" + memberId + ":info";
+
+        String filterString, operatorString, memberString=null;
+        if (memberId != null) {
+            Map<String, String> redisValues = redisService.getValue(Arrays.asList(key, opKey));
+            filterString = redisValues.get(key);
+            operatorString = redisValues.get(opKey);
+        }
+        else {
+            Map<String, String> redisValues = redisService.getValue(Arrays.asList(key, opKey, memberKey));
+            filterString = redisValues.get(key);
+            operatorString = redisValues.get(opKey);
+            memberString = redisValues.get(memberKey);
+        }
+
 
         List<Filter> filters;
-        if (filterString != null) filters = objectMapper.readValue(filterString, new TypeReference<List<Filter>>() {});
-        else {
+        if (filterString != null) {
+            filters = objectMapper.readValue(filterString, new TypeReference<List<Filter>>() {});
+        } else {
             filters = scenarioRepository.findById(scenarioId).orElse(null).getFilters();
             redisService.setValueWithTTL(key, objectMapper.writeValueAsString(filters), 600);
         }
 
         LogicalOperator logicalOperator;
-        if (operatorString != null) logicalOperator = objectMapper.readValue(operatorString, LogicalOperator.class);
-        else {
+        if (operatorString != null) {
+            logicalOperator = objectMapper.readValue(operatorString, LogicalOperator.class);
+        } else {
             logicalOperator = scenarioRepository.findById(scenarioId).orElse(null).getLogicalOperator();
             redisService.setValueWithTTL(opKey, objectMapper.writeValueAsString(logicalOperator), 600);
         }
 
-        try {
-            // 받은 메시지를 JSON으로 파싱
 
-            jsonNode = objectMapper.readTree(message);
-
-            // 고객 가져오기
-            Long memberId = 0L;
-            if (jsonNode.has("memberId")) {
-                memberId = jsonNode.get("memberId").asLong();
+        Member member = null;
+        if (memberString != null) member = objectMapper.readValue(memberString, Member.class);
+        else {
+            if (memberId != null) {
+                member = memberRepository.findById(memberId).orElse(null);
+                redisService.setValueWithTTL(memberKey, objectMapper.writeValueAsString(member), 600);
             }
-            if (memberId != 0L) {
-                member = memberRepository.findById(memberId).get();
-            }
+        }
 
-
-            // AND 연산
-            boolean flag;
-            if (logicalOperator == LogicalOperator.AND) {
-                flag = true;
-                for (Filter filter : filters) {
-                    if (!compare(filter.getLeft(), filter.getOperator(), filter.getRight())) {
-                        flag = false;
-                        break;
-                    }
+        // 5. 필터링 로직
+        boolean flag;
+        if (logicalOperator == LogicalOperator.AND) {
+            flag = true;
+            for (Filter filter : filters) {
+                if (!compare(filter.getLeft(), filter.getOperator(), filter.getRight(), member, jsonNode)) {
+                    flag = false;
+                    break;
                 }
             }
-            // OR 연산
-            else {
-                flag = false;
-                for (Filter filter : filters) {
-                    if (compare(filter.getLeft(), filter.getOperator(), filter.getRight())) {
-                        flag = true;
-                        break;
-                    }
+        } else {
+            flag = false;
+            for (Filter filter : filters) {
+                if (compare(filter.getLeft(), filter.getOperator(), filter.getRight(), member, jsonNode)) {
+                    flag = true;
+                    break;
                 }
             }
+        }
 
 
-            //== 저장 ==//
-            if (flag) {
-//                System.out.println("scenario_filter_"+scenarioId+" : 적합하므로 성공 테이블에 저장");
-                successLogRepository.save(new SuccessLog(scenarioId, jsonNode.toString()));
-            } else {
-//                System.out.println("scenario_filter_"+scenarioId+" : 적합하지 않으므로 실패 테이블에 저장");
-                failureLogRepository.save(new FailureLog(scenarioId, jsonNode.toString()));
+
+        //== 저장 ==//
+        if (flag) {
+            List<SuccessLog> buffer = successBuffer.get();
+            buffer.add(new SuccessLog(scenarioId, jsonNode.toString()));
+            flushSuccessIfNeeded(buffer);
+        } else {
+            List<FailureLog> buffer = failureBuffer.get();
+            buffer.add(new FailureLog(scenarioId, jsonNode.toString()));
+            flushFailureIfNeeded(buffer);
+        }
+
+    }
+
+
+    private void flushSuccessIfNeeded(List<SuccessLog> buffer) {
+        long now = System.currentTimeMillis();
+        if (buffer.size() >= BATCH_SIZE || now - lastFlushTime.get() >= FLUSH_INTERVAL_MS) {
+
+            if (!buffer.isEmpty()) {
+                successLogRepository.saveAll(new ArrayList<>(buffer));
+                buffer.clear();
             }
 
-        } catch (Exception e) {
-            System.err.println("Failed to filtering message: " + e.getMessage());
+            lastFlushTime.set(now);
         }
     }
 
-    private boolean compare(String left, String operator, String right) {
-        if (left.equals("age")) return compareAge(operator, right);
-        if (left.equals("gender")) return compareGender(operator, right);
-        if (left.equals("h") || left.equals("m") || left.equals("s"))
-            return compareInt(left, operator, right);
-        else return compareStr(left, operator, right);
+    private void flushFailureIfNeeded(List<FailureLog> buffer) {
+        long now = System.currentTimeMillis();
+        if (buffer.size() >= BATCH_SIZE || now - lastFlushTime.get() >= FLUSH_INTERVAL_MS) {
+
+            if (!buffer.isEmpty()) {
+                failureLogRepository.saveAll(new ArrayList<>(buffer));
+                buffer.clear();
+            }
+
+            lastFlushTime.set(now);
+        }
     }
 
-    private boolean compareStr(String left, String operator, String right) {
+
+    private boolean compare(String left, String operator, String right, Member member, JsonNode jsonNode) {
+        if (left.equals("age")) return compareAge(operator, right, member);
+        if (left.equals("gender")) return compareGender(operator, right, member);
+        if (left.equals("h") || left.equals("m") || left.equals("s")) return compareInt(left, operator, right, jsonNode);
+        else return compareStr(left, operator, right, jsonNode);
+    }
+
+    private boolean compareStr(String left, String operator, String right, JsonNode jsonNode) {
         String str = jsonNode.get(left).asText();
         switch (operator) {
             case "==":
@@ -142,7 +198,7 @@ public class FilterService {
                 throw new IllegalArgumentException("Invalid operator for string comparison: " + operator);
         }
     }
-    private boolean compareInt(String left, String operator, String right) {
+    private boolean compareInt(String left, String operator, String right, JsonNode jsonNode) {
         int hour = jsonNode.get(left).asInt();
         int comparison = Integer.parseInt(right);
         switch (operator) {
@@ -162,7 +218,7 @@ public class FilterService {
                 throw new IllegalArgumentException("Invalid operator for integer comparison: " + operator);
         }
     }
-    private boolean compareGender(String operator, String right) {
+    private boolean compareGender(String operator, String right, Member member) {
 
         // null이면 비회원으로 남긴 로그임
         if (member == null) {
@@ -180,7 +236,7 @@ public class FilterService {
                 throw new IllegalArgumentException("Invalid operator for gender comparison: " + operator);
         }
     }
-    private boolean compareAge(String operator, String right) {
+    private boolean compareAge(String operator, String right, Member member) {
 
         // null이면 비회원으로 남긴 로그임
         if (member == null) {

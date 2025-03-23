@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -26,6 +29,15 @@ public class RedisService {
 
     public String getValue(String key) {
         return (String) redisTemplate.opsForValue().get(key);
+    }
+
+    public Map<String, String> getValue(List<String> keys) {
+        List<Object> values = redisTemplate.opsForValue().multiGet(keys);
+        Map<String, String> result = new HashMap<>();
+        for (int i = 0; i < keys.size(); i++) {
+            result.put(keys.get(i), (String) values.get(i));
+        }
+        return result;
     }
 
     public void deleteValue(String key) {
