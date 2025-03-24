@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class FilterService {
 
-
+    private static final String NEXT_TOPIC_PREFIX = "spark_ingest_topic_";
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ScenarioRepository scenarioRepository;
     private final MemberRepository memberRepository;
@@ -87,7 +87,6 @@ public class FilterService {
 
 
         List<Filter> filters;
-        if (filterString != null) {
         LogicalOperator logicalOperator;
         if (filterString != null || operatorString != null) {
             filters = objectMapper.readValue(filterString, new TypeReference<List<Filter>>() {});
@@ -134,45 +133,53 @@ public class FilterService {
 
 
 
-        //== 저장 ==//
-        if (flag) {
-            List<SuccessLog> buffer = successBuffer.get();
-            buffer.add(new SuccessLog(scenarioId, jsonNode.toString()));
-            flushSuccessIfNeeded(buffer);
-        } else {
-            List<FailureLog> buffer = failureBuffer.get();
-            buffer.add(new FailureLog(scenarioId, jsonNode.toString()));
-            flushFailureIfNeeded(buffer);
-        }
+        ((ObjectNode) jsonNode).put("id", scenarioId);
+        if (flag) ((ObjectNode) jsonNode).put("success", 1);
+        else  ((ObjectNode) jsonNode).put("success", 0);
+        String newMessage = objectMapper.writeValueAsString(jsonNode);
+        System.out.println(newMessage);
+        kafkaTemplate.send(NEXT_TOPIC_PREFIX + scenarioId, newMessage);
+
+
+//        //== 저장 ==//
+//        if (flag) {
+//            List<SuccessLog> buffer = successBuffer.get();
+//            buffer.add(new SuccessLog(scenarioId, jsonNode.toString()));
+//            flushSuccessIfNeeded(buffer);
+//        } else {
+//            List<FailureLog> buffer = failureBuffer.get();
+//            buffer.add(new FailureLog(scenarioId, jsonNode.toString()));
+//            flushFailureIfNeeded(buffer);
+//        }
 
     }
 
 
-    private void flushSuccessIfNeeded(List<SuccessLog> buffer) {
-        long now = System.currentTimeMillis();
-        if (buffer.size() >= BATCH_SIZE || now - lastFlushTime.get() >= FLUSH_INTERVAL_MS) {
-
-            if (!buffer.isEmpty()) {
-                successLogRepository.saveAll(new ArrayList<>(buffer));
-                buffer.clear();
-            }
-
-            lastFlushTime.set(now);
-        }
-    }
-
-    private void flushFailureIfNeeded(List<FailureLog> buffer) {
-        long now = System.currentTimeMillis();
-        if (buffer.size() >= BATCH_SIZE || now - lastFlushTime.get() >= FLUSH_INTERVAL_MS) {
-
-            if (!buffer.isEmpty()) {
-                failureLogRepository.saveAll(new ArrayList<>(buffer));
-                buffer.clear();
-            }
-
-            lastFlushTime.set(now);
-        }
-    }
+//    private void flushSuccessIfNeeded(List<SuccessLog> buffer) {
+//        long now = System.currentTimeMillis();
+//        if (buffer.size() >= BATCH_SIZE || now - lastFlushTime.get() >= FLUSH_INTERVAL_MS) {
+//
+//            if (!buffer.isEmpty()) {
+//                successLogRepository.saveAll(new ArrayList<>(buffer));
+//                buffer.clear();
+//            }
+//
+//            lastFlushTime.set(now);
+//        }
+//    }
+//
+//    private void flushFailureIfNeeded(List<FailureLog> buffer) {
+//        long now = System.currentTimeMillis();
+//        if (buffer.size() >= BATCH_SIZE || now - lastFlushTime.get() >= FLUSH_INTERVAL_MS) {
+//
+//            if (!buffer.isEmpty()) {
+//                failureLogRepository.saveAll(new ArrayList<>(buffer));
+//                buffer.clear();
+//            }
+//
+//            lastFlushTime.set(now);
+//        }
+//    }
 
 
     private boolean compare(String left, String operator, String right, Member member, JsonNode jsonNode) {
