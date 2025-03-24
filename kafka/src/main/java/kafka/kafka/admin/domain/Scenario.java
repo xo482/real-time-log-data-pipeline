@@ -22,7 +22,7 @@ public class Scenario {
     @JoinColumn(name = "log_format_id")
     private LogFormat logFormat;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "scenario_filter", joinColumns = @JoinColumn(name = "scenario_id"))
     private List<Filter> filters = new ArrayList<>();
 

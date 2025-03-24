@@ -57,7 +57,6 @@ public class FilterService {
 
 
     @KafkaListener(topicPattern = "filter_topic_.*", groupId = "filter_group", concurrency = "3")
-    @Transactional
     public void listen(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws JsonProcessingException {
 
         // 1. JSON 파싱
@@ -89,17 +88,17 @@ public class FilterService {
 
         List<Filter> filters;
         if (filterString != null) {
-            filters = objectMapper.readValue(filterString, new TypeReference<List<Filter>>() {});
-        } else {
-            filters = scenarioRepository.findById(scenarioId).orElse(null).getFilters();
-            redisService.setValueWithTTL(key, objectMapper.writeValueAsString(filters), 600);
-        }
-
         LogicalOperator logicalOperator;
-        if (operatorString != null) {
+        if (filterString != null || operatorString != null) {
+            filters = objectMapper.readValue(filterString, new TypeReference<List<Filter>>() {});
             logicalOperator = objectMapper.readValue(operatorString, LogicalOperator.class);
         } else {
-            logicalOperator = scenarioRepository.findById(scenarioId).orElse(null).getLogicalOperator();
+
+            Scenario scenario = scenarioRepository.findById(scenarioId).orElse(null);
+            filters = scenario.getFilters();
+            logicalOperator = scenario.getLogicalOperator();
+
+            redisService.setValueWithTTL(key, objectMapper.writeValueAsString(filters), 600);
             redisService.setValueWithTTL(opKey, objectMapper.writeValueAsString(logicalOperator), 600);
         }
 
