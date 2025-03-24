@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class FilterService {
 
-
+    private static final String NEXT_TOPIC_PREFIX = "spark_ingest_topic_";
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ScenarioRepository scenarioRepository;
     private final MemberRepository memberRepository;
@@ -87,7 +87,6 @@ public class FilterService {
 
 
         List<Filter> filters;
-        if (filterString != null) {
         LogicalOperator logicalOperator;
         if (filterString != null || operatorString != null) {
             filters = objectMapper.readValue(filterString, new TypeReference<List<Filter>>() {});
