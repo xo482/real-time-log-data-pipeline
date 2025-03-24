@@ -25,7 +25,7 @@ public class ScenarioService {
     private final ScenarioRepository scenarioRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @KafkaListener(topicPattern = "scenario_topic_.*", groupId = "scenario_group", concurrency = "5")
+    @KafkaListener(topicPattern = "scenario_topic_.*", groupId = "scenario_group", concurrency = "3")
     public void listen(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws JsonProcessingException {
         Long scenarioId = extractScenarioIdFromTopic(topic);
         String key = "scenario:" + scenarioId + ":status";

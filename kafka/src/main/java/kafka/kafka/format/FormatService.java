@@ -27,7 +27,7 @@ public class FormatService {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final RedisService redisService;
 
-    @KafkaListener(topicPattern = "format_topic_.*", groupId = "format_group", concurrency = "5")
+    @KafkaListener(topicPattern = "format_topic_.*", groupId = "format_group", concurrency = "3")
     public void listen(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws JsonProcessingException {
         Long scenarioId = extractScenarioIdFromTopic(topic);
         String key = "scenario:" + scenarioId + ":format";

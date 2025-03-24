@@ -24,7 +24,7 @@ public class KafkaConsumerService {
     private ObjectMapper objectMapper = new ObjectMapper();
 
 
-    @KafkaListener(topics = TOPIC_NAME, groupId = "my_group", concurrency = "5")
+    @KafkaListener(topics = TOPIC_NAME, groupId = "my_group", concurrency = "3")
     public void listen(String message) {
         // 메시지 출력
 //        System.out.println("Hub Received message: " + message);
