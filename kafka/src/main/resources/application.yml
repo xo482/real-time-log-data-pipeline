@@ -6,7 +6,12 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
 
   kafka:
-    bootstrap-servers: ec2-13-125-115-96.ap-northeast-2.compute.amazonaws.com:9092
+    bootstrap-servers:
+      - 172.31.34.238:9092
+      - 172.31.44.175:9092
+      - 172.31.33.93:9092
+    producer:
+      acks: all
 
 spring.data:
   redis:
