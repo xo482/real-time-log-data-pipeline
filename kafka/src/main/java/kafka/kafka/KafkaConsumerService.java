@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import kafka.kafka.admin.repository.ScenarioRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -13,69 +14,68 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class KafkaConsumerService {
 
     private static final String TOPIC_NAME = "start_topic";
 
     private final KafkaTemplate<String, String> kafkaTemplate;
-    private final ScenarioRepository scenarioRepository;
-
-
     private ObjectMapper objectMapper = new ObjectMapper();
 
 
     @KafkaListener(topics = TOPIC_NAME, groupId = "my_group", concurrency = "3")
     public void listen(String message) {
-        // 메시지 출력
-//        System.out.println("Hub Received message: " + message);
 
         try {
             // JSON 객체로 파싱
             JsonNode jsonNode = objectMapper.readTree(message);
-            // message 키와 time 키에 대한 필드 추출
-            if (jsonNode.has("message") && jsonNode.has("date")) {
-                String logMessage = jsonNode.get("message").asText();
-                String date = jsonNode.get("date").asText();
 
-                // path 필드에서 pageView 값을 추출
-                String pathValue = "";
-                if (logMessage.contains("path=")) {
-                    pathValue = logMessage.split("path=")[1].split(" ")[0].split("/")[1];
-                }
-
-                if(pathValue.equals("event")) {
-                    // "params=" 이후의 문자열을 추출
-                    String[] parts = logMessage.split("params=");
-                    if (parts.length > 1) {
-                        String paramsString = parts[1].trim();
-
-                        // params 문자열을 JSON 객체로 파싱
-                        JsonNode paramsJson = objectMapper.readTree(paramsString);
-
-                        // uadata 필드가 삭제
-                        if (paramsJson.has("uadata")) {
-                            ((ObjectNode) paramsJson).remove("uadata");
-                        }
-
-                        // time 값을 paramsJson에 추가
-                        ((ObjectNode) paramsJson).put("date", date);
-
-
-//                        List<Long> ids = scenarioRepository.findAllIds();
-//                        for (Long id : ids)  {
-//                            kafkaTemplate.send("scenario_topic_" + id, paramsJson.toString());
-//                        }
-                        kafkaTemplate.send("scenario_topic_1", paramsJson.toString());
-                    } else {
-                        System.out.println("The message does not contain 'params='.");
-                    }
-                }
-
-            } else {
-                System.out.println("내가 원하는 로그가 온 것이 아니다.");
+            // 내가 원하는 데이터가 들어온 것이 아니라면 메서드 종료시킴
+            if (!jsonNode.has("path")) {
+                log.warn("Invalid message received: {}", message);
+                return;
             }
+
+            // path 필드에서 쿼리 문자열과 날짜 꺼냄
+            String queryString = jsonNode.get("path").asText();
+            String date = jsonNode.get("date").asText();
+
+            // 쿼리 문자열에서 필요한 정보만 추출
+            queryString = queryString.split("\\?")[1];
+
+            // 쿼리 문자열을 JSON 객체로 변환
+            JsonNode queryJson = convertQueryStringToJson(queryString);
+
+            // 불핋요한 필드 삭제 (uadata)
+            if (queryJson.has("uadata"))
+                ((ObjectNode) queryJson).remove("uadata");
+
+            // date 값을 paramsJson에 추가
+            ((ObjectNode) queryJson).put("date", date);
+
+            // scenario_topic_1으로 데이터 전송
+            kafkaTemplate.send("scenario_topic_1", queryJson.toString());
+
         } catch (Exception e) {
             System.err.println("Failed to parse message: " + e.getMessage());
         }
+    }
+
+    // 쿼리 문자열을 JSON 형식으로 변환하는 메서드
+    private JsonNode convertQueryStringToJson(String queryString) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode queryJson = objectMapper.createObjectNode();
+
+        // 쿼리 문자열을 &로 구분하여 각 파라미터를 분리하고, 이를 JSON 객체로 변환
+        for (String param : queryString.split("&")) {
+            String[] keyValue = param.split("=");
+            if (keyValue.length == 2) {
+                String key = keyValue[0];
+                String value = keyValue[1];
+                queryJson.put(key, value);
+            }
+        }
+
+        return queryJson;
     }
 }
