@@ -1,5 +1,6 @@
 package kafka.kafka.admin.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,6 +54,13 @@ public class Scenario {
     // 필터를 제거하는 메서드
     public void removeFilter(Filter filter) {
         this.filters.remove(filter);
+    }
+
+    // 시나리오의 현재 실행 상태를 반환하는 메서드
+    // json에서 running이라는 필드를 찾지 않도록 애노테이션 추가
+    @JsonIgnore
+    public boolean isRunning() {
+        return this.status == Status.RUN;
     }
 }
 
