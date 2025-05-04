@@ -40,7 +40,7 @@ public class ScenarioProcessingService {
     private final ScenarioRepository scenarioRepository;
     private final MemberRepository memberRepository;
 
-    @KafkaListener(topics = TOPIC_NAME, groupId = CONSUMER_GROUP_NAME, concurrency = "9")
+    @KafkaListener(topics = TOPIC_NAME, groupId = CONSUMER_GROUP_NAME, concurrency = "3")
     public void listen(String message) {
         try {
             // JSON 객체로 파싱
@@ -79,22 +79,22 @@ public class ScenarioProcessingService {
             ////////////////  여기서부터 로그 포멧 변환 ////////////////
 
             LogFormat format = scenario.getLogFormat();
-            parsingJsonByFormat(format, jsonNode);
+            parsingJsonByFormat(format, queryJson);
 
             ////////////////////////////////////////// 필터링
 
             List<Filter> filters = scenario.getFilters();
             LogicalOperator logicalOperator = scenario.getLogicalOperator();
-            Member member = getMemberFromCacheOrDb(jsonNode);
+            Member member = getMemberFromCacheOrDb(queryJson);
 
             // 5. 필터링 로직
-            boolean flag = evaluateFilters(logicalOperator, filters, member, jsonNode);
+            boolean flag = evaluateFilters(logicalOperator, filters, member, queryJson);
 
             // spark 전송을 위해 spark_ingest_topic으로 전송
-            ((ObjectNode) jsonNode).put("scenario_id", scenarioId);
-            if (flag) ((ObjectNode) jsonNode).put("success", 1);
-            else ((ObjectNode) jsonNode).put("success", 0);
-            String newMessage = objectMapper.writeValueAsString(jsonNode);
+            ((ObjectNode) queryJson).put("scenario_id", scenarioId);
+            if (flag) ((ObjectNode) queryJson).put("success", 1);
+            else ((ObjectNode) queryJson).put("success", 0);
+            String newMessage = objectMapper.writeValueAsString(queryJson);
             kafkaTemplate.send(NEXT_TOPIC_PREFIX, newMessage);
 
         } catch (InvalidLogDataException e) {
@@ -164,7 +164,7 @@ public class ScenarioProcessingService {
                 field.setAccessible(true);
                 String key = field.getName();
                 if ("id".equals(key)) continue;
-                if ((int) field.get(format) == 0) {
+                if (((int) field.get(format)) == 0) {
                     objNode.remove(key);
                 }
             } catch (Exception e) {
