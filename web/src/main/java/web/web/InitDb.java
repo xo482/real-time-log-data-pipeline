@@ -28,7 +28,7 @@ public class InitDb {
         initService.dbInit2();
         initService.dbInit3();
         initService.InitScenario1();
-//        initService.InitScenario2();
+        initService.InitScenario2();
         initService.dbInit5();
         initService.dbInit6();
     }
@@ -57,15 +57,15 @@ public class InitDb {
         public void InitScenario1() {
             LogFormat logFormat = new LogFormat();
             logFormat.setDate(1);
-            logFormat.setHTTP_USER_AGENT(1);
+            logFormat.setUrl(1);
             em.persist(logFormat);
 
-            Filter filter1 = new Filter("HTTP_USER_AGENT", "contains", "Chrome");
+            Filter filter1 = new Filter("url", "contains", "Adidas");
 
             List<Filter> filters = new ArrayList<>();
             filters.add(filter1);
 
-            String title = "크롬으로 들어와 구매 버튼을 누른 사람의 비율은?";
+            String title = "아디다스 제품을 구매한 사람의 정보 수집";
             String manager = "홍길동";
             Status status = Status.RUN;
             LogicalOperator logicalOperator = LogicalOperator.AND;
@@ -75,7 +75,6 @@ public class InitDb {
         }
         public void InitScenario2() {
             LogFormat logFormat = new LogFormat();
-            logFormat.setE_n(1);
             logFormat.setH(1);
             logFormat.setMemberId(1);
             logFormat.setDate(1);
@@ -91,7 +90,7 @@ public class InitDb {
             filters.add(filter2);
             filters.add(filter3);
 
-            String title = " 13시 이후 구매 버튼을 누르는 사람 중에 성인 남성 비율을 알아보기 위한 시나리오";
+            String title = " 9시 이후 구매 버튼을 누르는 사람 중에 성인 남성 정보 수집";
             String manager = "홍길동";
             Status status = Status.RUN;
             LogicalOperator logicalOperator = LogicalOperator.AND;
