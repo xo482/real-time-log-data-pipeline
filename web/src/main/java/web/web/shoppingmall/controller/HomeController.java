@@ -5,9 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import web.web.admin.dto.ScenarioRatioDto;
 import web.web.visualization.VisualizationService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -75,5 +77,12 @@ public class HomeController {
         result.put("success", countList[0]);
         result.put("failure", countList[1]);
         return result;
+    }
+
+
+    @GetMapping("/api/scenario/scenario_ratios")
+    @ResponseBody
+    public List<ScenarioRatioDto> getScenarioRatios() {
+        return visualizationService.getScenarioRatios();
     }
 }

@@ -30,198 +30,104 @@
   <script src="../../plugins/jquery/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
 
-  <script th:inline="javascript">
-    var myChart;
-
-    function drawChart(success, failure) {
-      // 차트 데이터 설정
-      var chartData = [
-        { value: success, name: 'Success' },
-        { value: failure, name: 'Failure' }
-      ];
-
-      // ECharts 인스턴스 초기화
-      if (!myChart) {
-        myChart = echarts.init(document.getElementById('chartContainer'));
-      }
-
-      // 차트 옵션 설정
-      var option = {
-        tooltip: {
-          trigger: 'item'
-        },
-        legend: {
-          top: '5%',
-          left: 'center'
-        },
-        series: [
-          {
-            name: 'Result',
-            type: 'pie',
-            radius: ['40%', '70%'],
-            avoidLabelOverlap: false,
-            padAngle: 5,
-            itemStyle: {
-              borderRadius: 10
-            },
-            label: {
-              show: false,
-              position: 'center'
-            },
-            emphasis: {
-              label: {
-                show: true,
-                fontSize: 20,
-                fontWeight: 'bold'
-              }
-            },
-            labelLine: {
-              show: false
-            },
-            data: chartData
-          }
-        ]
-      };
-
-      // 차트에 옵션 적용
-      myChart.setOption(option);
-    }
-
-    function fetchDataAndDrawChart() {
-      fetch('/api/logCount')
-        .then(response => response.json())
-        .then(data => {
-          drawChart(data.success, data.failure);
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-        });
-    }
-
-    // 페이지 로드 시 차트 그리기 및 2초마다 업데이트
-    window.onload = function() {
-      fetchDataAndDrawChart();
-      setInterval(fetchDataAndDrawChart, 2000);
-    };
-  </script>
-
-  <!--실시간 그래프-->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      console.log("DOMContentLoaded event triggered");
+      // ① ECharts 인스턴스 초기화
+      const successChart = echarts.init(document.getElementById('successRatioChart'));
+      const totalChart   = echarts.init(document.getElementById('totalCountChart'));
 
-      var chartDom = document.getElementById('main');
-      var myChart = echarts.init(chartDom);
-      var option = {
-        title: {
-          text: ''
-        },
-        tooltip: {
-          trigger: 'axis',
-          formatter: function (params) {
-            return params.map(function (item) {
-              return item.marker + item.seriesName + ': ' + item.value[1];
-            }).join('<br/>');
-          },
-          axisPointer: {
-            animation: false
-          }
-        },
-        legend: {
-          data: []
-        },
-        xAxis: {
-          type: 'category',
-          splitLine: {
-            show: false
-          },
-          data: [], // xAxis에 데이터를 추가할 수 있도록 배열을 설정
-          axisLabel: {
-            formatter: function (value) {
-              return value; // 이미 문자열로 변환된 시간 값을 그대로 사용
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          boundaryGap: [0, '100%'],
-          splitLine: {
-            show: false
-          }
-        },
+      // ② 최대 포인트 수 (10개 → 약 50초)
+      const maxPoints = 10;
+      const timeLabels = [];  // x축에 찍힐 시각 문자열 목록
+
+      // ③ 각 시나리오별 데이터 저장소
+      const successData = {}; // { scenarioId: [ {value:0.6}, ... ] }
+      const totalData   = {}; // { scenarioId: [ {value:20}, ... ] }
+
+      // ④ 차트 옵션 기본 구조
+      const successOption = {
+        title: { text: '' },
+        tooltip: { trigger: 'axis' },
+        legend: { data: [] },
+        xAxis:  { type: 'category', data: timeLabels },
+        yAxis:  { type: 'value', min: 0, max: 1 },
+        series: []
+      };
+      const totalOption = {
+        title: { text: '' },
+        tooltip: { trigger: 'axis' },
+        legend: { data: [] },
+        xAxis:  { type: 'category', data: timeLabels },
+        yAxis:  { type: 'value' },
         series: []
       };
 
-      var seriesData = {};
-      var maxDataPoints = 7; // 최대 데이터 포인트 수 설정
-      var interval = 2000; // 2초 간격
-      var xAxisData = []; // xAxis 데이터 배열
-
-      function initializeSeries(scenarioId) {
-        if (!seriesData[scenarioId]) {
-          seriesData[scenarioId] = {
-            success: []
-          };
-
-          for (var i = 0; i < maxDataPoints; i++) {
-            seriesData[scenarioId].success.push({
-              name: '',
-              value: ['', 0]
-            });
-          }
-
-          option.series.push({
-            name: 'Scenario ' + scenarioId + ' Success',
-            type: 'line',
-            showSymbol: false,
-            hoverAnimation: false,
-            data: seriesData[scenarioId].success
+      // ⑤ 시나리오별 시리즈 초기화 함수
+      function initSeries(id) {
+        const name = `Scenario ${id}`;
+        if (!successData[id]) {
+          successData[id] = Array(maxPoints).fill({ value: 0 });
+          successOption.series.push({
+            name, type: 'line', showSymbol: false,
+            data: successData[id]
           });
-
-          option.legend.data.push('Scenario ' + scenarioId + ' Success');
+          successOption.legend.data.push(name);
+        }
+        if (!totalData[id]) {
+          totalData[id] = Array(maxPoints).fill({ value: 0 });
+          totalOption.series.push({
+            name, type: 'line', showSymbol: false,
+            data: totalData[id]
+          });
+          totalOption.legend.data.push(name);
         }
       }
 
-      function fetchLiveData() {
-        console.log("Fetching live data");
-        fetch('/api/live-count')
-          .then(response => response.json())
-          .then(data => {
-            var currentTime = new Date();
-            var currentTimeStr = currentTime.getHours().toString().padStart(2, '0') + ':' +
-              currentTime.getMinutes().toString().padStart(2, '0') + ':' +
-              currentTime.getSeconds().toString().padStart(2, '0');
+      // ⑥ 데이터 가져와서 차트 업데이트
+      function updateCharts() {
+        fetch('/api/scenario/scenario_ratios')
+          .then(r => r.json())
+          .then(arr => {
+            // 현재 시각 문자열 (HH:mm:ss)
+            const now = new Date();
+            const t = now.toTimeString().split(' ')[0];
 
-            if (xAxisData.length >= maxDataPoints) {
-              xAxisData.shift();
-            }
-            xAxisData.push(currentTimeStr);
+            // x축 라벨 관리
+            if (timeLabels.length >= maxPoints) timeLabels.shift();
+            timeLabels.push(t);
 
-            option.xAxis.data = xAxisData;
+            // 모든 시리즈의 xAxis.data 갱신
+            successOption.xAxis.data = [...timeLabels];
+            totalOption.xAxis.data   = [...timeLabels];
 
-            Object.keys(data).forEach(function (scenarioId) {
-              initializeSeries(scenarioId);
-              var successLogCount = data[scenarioId];
+            // 각 시나리오별로 배열 갱신
+            arr.forEach(o => {
+              const id = o.scenario_id;
+              console.log(id);
+              initSeries(id);
 
-              if (seriesData[scenarioId].success.length >= maxDataPoints) {
-                seriesData[scenarioId].success.shift();
-              }
+              // 성공률
+              if (successData[id].length >= maxPoints) successData[id].shift();
+              successData[id].push({ value: o.success_ratio });
 
-              seriesData[scenarioId].success.push({
-                name: currentTimeStr,
-                value: [currentTimeStr, successLogCount]
-              });
+              // 유입량
+              if (totalData[id].length >= maxPoints) totalData[id].shift();
+              totalData[id].push({ value: o.total_count });
             });
 
-            myChart.setOption(option);
-          });
+            // 옵션 반영
+            successChart.setOption(successOption);
+            totalChart.setOption(totalOption);
+          })
+          .catch(e => console.error('차트 데이터 로드 실패', e));
       }
 
-      myChart.setOption(option);
-      setInterval(fetchLiveData, interval); // 2초마다 갱신
-      fetchLiveData();
+      // ⑦ 최초 렌더링 및 5초마다 갱신
+      updateCharts();
+      setInterval(updateCharts, 5000);
     });
   </script>
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -312,21 +218,6 @@
               </div>
             </div>
           </div>
-          <!-- ./col -->
-<!--          <div class="col-lg-3 col-6">-->
-<!--            &lt;!&ndash; small box &ndash;&gt;-->
-<!--            <div class="small-box bg-success">-->
-<!--              <div class="inner">-->
-<!--                <h3>53<sup style="font-size: 20px">%</sup></h3>-->
-
-<!--                <p>이탈률</p>-->
-<!--              </div>-->
-<!--              <div class="icon">-->
-<!--                <i class="ion ion-stats-bars"></i>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-          <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
             <div class="small-box bg-warning">
@@ -357,42 +248,43 @@
           <!-- ./col -->
         </div>
         <!-- /.row -->
-        <!-- Main row -->
+        <!-- 시나리오별 데이터 유입량 그래프 row -->
         <div class="row">
           <!-- Left col -->
-          <section class="col-lg-7 connectedSortable">
+          <section class="col-lg-11 connectedSortable">
             <!-- Custom tabs (Charts with tabs)-->
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-chart-pie mr-1"></i>
-                  시나리오 성공 비율
+                  시나리오별 유입량 (최근 50초)
                 </h3>
               </div><!-- /.card-header -->
               <div class="card-body">
 
-                <div id="chartContainer" style="height: 300px;"></div><!-- 파이차트를 표시할 요소 -->
+                <!-- 시나리오별 데이터 유입량 꺾은선 그래프 -->
+                <div id="totalCountChart" style="height: 250px;"></div>
 
               </div><!-- /.card-body -->
             </div>
           </section>
+        </div>
 
-
-          <!-- /.Left col -->
-          <!-- right col (We are only adding the ID to make the widgets sortable)-->
-          <section class="col-lg-5 connectedSortable">
+        <!-- 시나리오별 성공 비율 그래프 row -->
+        <div class="row">
+          <section class="col-lg-11 connectedSortable">
             <!-- solid sales graph -->
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-th mr-1"></i>
-                  실시간 시나리오 성공 그래프
+                  시나리오별 성공률 (최근 50초)
                 </h3>
               </div>
               <div class="card-body">
 
-                <!--여기에 새로운 실시간 그래프를 삽입할 것이다.-->
-                <div id="main" style="width: 110%; height: 400px;"></div>
+                <!-- 시나리오별 성공 비율 꺾은선 그래프 -->
+                <div id="successRatioChart" style="height: 250px;"></div>
 
               </div>
               <!-- /.card-body -->
@@ -429,7 +321,6 @@
             </div>
             <!-- /.card -->
           </section>
-          <!-- right col -->
         </div>
         <!-- /.row (main row) -->
       </div><!-- /.container-fluid -->
