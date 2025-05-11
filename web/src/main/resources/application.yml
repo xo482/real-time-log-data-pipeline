@@ -4,9 +4,9 @@ spring:
       static-locations: classpath:/templates/AdminLTE-3.2.0-rc/
 
   datasource:
-    url: jdbc:mariadb://ec2-13-125-167-23.ap-northeast-2.compute.amazonaws.com:3306/sku
-    username: root
-    password: A!CWUgeouv5evo
+    url: jdbc:mariadb://${DB_IP}:3306/sku
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
 
   thymeleaf:
@@ -20,20 +20,17 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-#        show_sql: true #얘는 콘솔에 찍는건데 이건 아래에서 debug 해놓은거로 로그에 남겨놓는게 좋기때문에 주석 처리했다
-#        format_sql: true
         default_batch_fetch_size: 100
     database-platform: org.hibernate.dialect.MariaDBDialect
 
   data:
     redis:
       port: 6379
-      host: ec2-13-125-167-23.ap-northeast-2.compute.amazonaws.com
+      host: ${REDIS_IP}
 
 logging:
   level:
     org.hibernate.sql: debug
-#    org.hibernate.type: trace #파라미터 바인딩되는 파라미터까지 볼 수 있게 해줌
 
 
 server:
