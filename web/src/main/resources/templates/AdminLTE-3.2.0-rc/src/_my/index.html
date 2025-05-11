@@ -31,101 +31,107 @@
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // ① ECharts 인스턴스 초기화
-      const successChart = echarts.init(document.getElementById('successRatioChart'));
-      const totalChart   = echarts.init(document.getElementById('totalCountChart'));
+    // 비동기로 차트 데이터를 로드하는 함수
+    async function loadCharts() {
+      const res = await fetch('/api/scenario/scenario_ratios');
 
-      // ② 최대 포인트 수 (10개 → 약 50초)
-      const maxPoints = 10;
-      const timeLabels = [];  // x축에 찍힐 시각 문자열 목록
+      /**
+       * ✅ data: Map 형태의 JSON 객체
+       * {
+       *   "1": [ { scenarioId, successRatio, totalCount, collectedAt, ... }, ... ],  // 최대 10개
+       *   "2": [ { ... }, ... ]
+       * }
+       * 각 key는 시나리오 ID (문자열), value는 해당 시나리오의 시간순 DTO 배열
+       */
+      const data = await res.json();
 
-      // ③ 각 시나리오별 데이터 저장소
-      const successData = {}; // { scenarioId: [ {value:0.6}, ... ] }
-      const totalData   = {}; // { scenarioId: [ {value:20}, ... ] }
+      /**
+       * ✅ successSeries: Array<EChartsSeries>
+       * 각 시나리오별 성공률 시리즈 { name, type, data }를 담는 배열
+       */
+      const successSeries = [];
 
-      // ④ 차트 옵션 기본 구조
-      const successOption = {
-        title: { text: '' },
-        tooltip: { trigger: 'axis' },
-        legend: { data: [] },
-        xAxis:  { type: 'category', data: timeLabels },
-        yAxis:  { type: 'value', min: 0, max: 1 },
-        series: []
-      };
-      const totalOption = {
-        title: { text: '' },
-        tooltip: { trigger: 'axis' },
-        legend: { data: [] },
-        xAxis:  { type: 'category', data: timeLabels },
-        yAxis:  { type: 'value' },
-        series: []
-      };
+      /**
+       * ✅ totalSeries: Array<EChartsSeries>
+       * 각 시나리오별 유입량 시리즈 { name, type, data }를 담는 배열
+       */
+      const totalSeries = [];
 
-      // ⑤ 시나리오별 시리즈 초기화 함수
-      function initSeries(id) {
-        const name = `Scenario ${id}`;
-        if (!successData[id]) {
-          successData[id] = Array(maxPoints).fill({ value: 0 });
-          successOption.series.push({
-            name, type: 'line', showSymbol: false,
-            data: successData[id]
+      /**
+       * ✅ xLabels: Array<string>
+       * 모든 시나리오가 동일한 시간대를 사용하므로, 최초 1개 시나리오 기준으로 수집
+       * 'HH:MM:SS' 형태의 문자열로 변환한 collectedAt 값이 들어감
+       */
+      let xLabels = [];
+
+      /**
+       * ✅ 반복: 각 시나리오에 대해 성공률 시리즈와 유입량 시리즈 생성
+       */
+      Object.entries(data).forEach(([id, history]) => {
+        const name = `Scenario ${id}`; // 시리즈 이름 (범례에 사용됨)
+
+        // 각 시점별 성공률 배열 추출: Array<number>
+        const success = history.map(h => h.success_ratio);
+
+        // 각 시점별 유입량 배열 추출: Array<number>
+        const total = history.map(h => h.total_count);
+
+        // 최초 1개 시나리오에서만 시간 라벨 생성
+        if (xLabels.length === 0) {
+          xLabels = history.map(h => {
+            const d = new Date(h.collectedAt); // ISO 포맷 문자열 → JS Date
+            return d.toTimeString().split(' ')[0]; // 'HH:MM:SS' 형태 추출
           });
-          successOption.legend.data.push(name);
         }
-        if (!totalData[id]) {
-          totalData[id] = Array(maxPoints).fill({ value: 0 });
-          totalOption.series.push({
-            name, type: 'line', showSymbol: false,
-            data: totalData[id]
-          });
-          totalOption.legend.data.push(name);
-        }
-      }
 
-      // ⑥ 데이터 가져와서 차트 업데이트
-      function updateCharts() {
-        fetch('/api/scenario/scenario_ratios')
-          .then(r => r.json())
-          .then(arr => {
-            // 현재 시각 문자열 (HH:mm:ss)
-            const now = new Date();
-            const t = now.toTimeString().split(' ')[0];
+        // 성공률 시리즈 객체 구성 및 등록
+        successSeries.push({
+          name,
+          type: 'line',        // 라인 그래프
+          showSymbol: false,   // 데이터 포인트 심볼 숨김
+          data: success        // y축 데이터 (성공률)
+        });
 
-            // x축 라벨 관리
-            if (timeLabels.length >= maxPoints) timeLabels.shift();
-            timeLabels.push(t);
+        // 유입량 시리즈 객체 구성 및 등록
+        totalSeries.push({
+          name,
+          type: 'bar',         // 막대 그래프
+          showSymbol: false,
+          data: total          // y축 데이터 (유입량)
+        });
+      });
 
-            // 모든 시리즈의 xAxis.data 갱신
-            successOption.xAxis.data = [...timeLabels];
-            totalOption.xAxis.data   = [...timeLabels];
+      // ✅ 성공률 차트 초기화 및 렌더링
+      echarts.init(document.getElementById('successRatioChart')).setOption({
+        title: { text: '성공률 (%)' },
+        tooltip: { trigger: 'axis' },
+        legend: { data: successSeries.map(s => s.name) },
+        xAxis: { type: 'category', data: xLabels }, // 공통 시간 라벨
+        yAxis: { type: 'value', min: 0, max: 1 },   // 성공률은 0.0 ~ 1.0
+        series: successSeries
+      });
 
-            // 각 시나리오별로 배열 갱신
-            arr.forEach(o => {
-              const id = o.scenario_id;
-              console.log(id);
-              initSeries(id);
+      // ✅ 유입량 차트 초기화 및 렌더링
+      echarts.init(document.getElementById('totalCountChart')).setOption({
+        title: { text: '유입량 (건수)' },
+        tooltip: { trigger: 'axis' },
+        legend: { data: totalSeries.map(s => s.name) },
+        xAxis: { type: 'category', data: xLabels }, // 동일한 x축
+        yAxis: { type: 'value' },                   // 유입량은 자연수
+        series: totalSeries
+      });
 
-              // 성공률
-              if (successData[id].length >= maxPoints) successData[id].shift();
-              successData[id].push({ value: o.success_ratio });
+      console.log("🔥 data:", data);  // 전체 응답 구조 확인
+      Object.entries(data).forEach(([id, history]) => {
+        console.log(`▶ Scenario ${id}:`);
+        console.log("  collectedAt:", history.map(h => h.collectedAt));
+        console.log("  successRatio:", history.map(h => h.success_ratio));
+        console.log("  totalCount:", history.map(h => h.total_count));
+      });
+    }
 
-              // 유입량
-              if (totalData[id].length >= maxPoints) totalData[id].shift();
-              totalData[id].push({ value: o.total_count });
-            });
-
-            // 옵션 반영
-            successChart.setOption(successOption);
-            totalChart.setOption(totalOption);
-          })
-          .catch(e => console.error('차트 데이터 로드 실패', e));
-      }
-
-      // ⑦ 최초 렌더링 및 5초마다 갱신
-      updateCharts();
-      setInterval(updateCharts, 5000);
-    });
+    loadCharts();                  // 페이지 최초 로드 시 실행
+    setInterval(loadCharts, 5000); // 5초마다 실시간 갱신
   </script>
 
 </head>
