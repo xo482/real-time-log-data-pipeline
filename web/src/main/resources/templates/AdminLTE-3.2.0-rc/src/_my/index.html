@@ -71,7 +71,7 @@
         const name = `Scenario ${id}`; // 시리즈 이름 (범례에 사용됨)
 
         // 각 시점별 성공률 배열 추출: Array<number>
-        const success = history.map(h => h.success_ratio);
+        const success = history.map(h => h.success_ratio * 100);
 
         // 각 시점별 유입량 배열 추출: Array<number>
         const total = history.map(h => h.total_count);
