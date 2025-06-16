@@ -107,7 +107,7 @@
         tooltip: { trigger: 'axis' },
         legend: { data: successSeries.map(s => s.name) },
         xAxis: { type: 'category', data: xLabels }, // 공통 시간 라벨
-        yAxis: { type: 'value', min: 0, max: 1 },   // 성공률은 0.0 ~ 1.0
+        yAxis: { type: 'value', min: 0, max: 100 },   // 성공률은 0% ~ 100%
         series: successSeries
       });
 
