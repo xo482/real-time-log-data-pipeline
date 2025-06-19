@@ -1,6 +1,4 @@
-# Real-Time Log Data Pipeline
-
-<br></br>
+# 로그데이터 수집을 통한 고객 행동 데이터 활용 프로젝트
 
 ## 프로젝트 소개
 
