@@ -184,7 +184,7 @@ query_redis = flattened_df.select("scenario_id", "success").writeStream \
   <img src="https://github.com/xo482/real-time-log-data-pipeline/blob/dev/images/monitoring.png" width="600">
 
 <br></br>
-##기술 스택
+## 기술 스택
 
 | 범주             | 사용 기술 및 도구                                             | 설명                                     |
 | -------------- | ------------------------------------------------------ | -------------------------------------- |
