@@ -139,20 +139,20 @@ public class VisualizationService {
             String currentUpdatedAt = parsed.getUpdatedAt(); // Spark 기준 시각
             String lastSeenUpdatedAt = lastUpdatedAtByScenario.get(scenarioId); // 이전에 본 Spark 시각
 
-            // ✅ 새로운 시나리오 감지 시: 9건 0으로 초기화
+            // 새로운 시나리오 감지 시: 9건 0으로 초기화
             Long historySize = redisTemplate.opsForList().size(historyKey);
             if (historySize == null || historySize == 0) {
                 // 최근 9개 시점을 기준으로 성공률 0.0 유입량 0 삽입
                 initializeZeroHistory(scenarioId, 9, now);
             }
 
-            // ✅ 유입이 없는 경우 (updatedAt이 이전과 같음)
+            // 유입이 없는 경우 (updatedAt이 이전과 같음)
             if (currentUpdatedAt != null && currentUpdatedAt.equals(lastSeenUpdatedAt)) {
                 ScenarioRatioDto zeroDto = createZeroDto(scenarioId, nowCorrected);
                 redisTemplate.opsForList().rightPush(historyKey, toJson(zeroDto));
                 redisTemplate.opsForList().trim(historyKey, -10, -1);
             }
-            // ✅ 새로운 유입 발생 시: 실제 데이터 저장
+            // 새로운 유입 발생 시: 실제 데이터 저장
             else {
                 parsed.setCollectedAt(nowCorrected); // Spring 기준 시간으로 보정
                 redisTemplate.opsForList().rightPush(historyKey, toJson(parsed));
