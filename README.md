@@ -155,7 +155,7 @@ query_redis = flattened_df.select("scenario_id", "success").writeStream \
     .outputMode("append") \
     .trigger(processingTime="5 seconds") \
     .foreachBatch(write_to_redis) \
-    .option("checkpointLocation", f"hdfs://{HDFS_IP}:9000/checkpoint_success_ratio_pt") \
+    .option("checkpointLocation", "hdfs://[REDIS_IP]:9000/checkpoint_success_ratio_pt") \
     .start()
 
 )
